@@ -1,20 +1,48 @@
 package k4unl.minecraft.colorchat.events;
 
+import java.util.List;
+
 import k4unl.minecraft.colorchat.lib.Log;
+import k4unl.minecraft.colorchat.lib.SpecialChars;
+import k4unl.minecraft.colorchat.lib.User;
+import k4unl.minecraft.colorchat.lib.Users;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.IChatComponent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ServerChatEvent;
+import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 public class EventHelper {
-
-	
 	public static void init(){
 		MinecraftForge.EVENT_BUS.register(new EventHelper());
+		FMLCommonHandler.instance().bus().register(new EventHelper());
 	}
 	
 	@SubscribeEvent
-	public static void chatEvent(ServerChatEvent event){
+	public void chatEvent(ServerChatEvent event){
 		Log.info("We got a chat message: " + event.username + ":" + event.message);
-		event.setCanceled(true);
+		
+		ChatComponentTranslation orig = event.component.createCopy();
+		List siblings = orig.getSiblings();
+		
+		User usr = Users.getUserByName(event.username);
+		
+		
+		String userName;
+		if(usr.hasNick()){
+			userName = usr.getColor().toString() + "<~" + usr.getNick() + "> ";
+		}else{
+			userName = usr.getColor().toString() + "<" + usr.getUserName()+ "> ";
+		}
+		String chatMessage = SpecialChars.RESET + event.message;
+		String textMessage = userName + chatMessage;
+		
+		event.component = new ChatComponentTranslation(textMessage);
+		
+		
+		for(Object s : siblings){
+			event.component.appendSibling((IChatComponent) s);
+		}
 	}
 }
