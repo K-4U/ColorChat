@@ -29,13 +29,16 @@ public class EventHelper {
 		User usr = Users.getUserByName(event.username);
 		
 		
-		String userName;
-		if(usr.hasNick()){
-			userName = usr.getColor().toString() + "<~" + usr.getNick() + "> ";
-		}else{
-			userName = usr.getColor().toString() + "<" + usr.getUserName()+ "> ";
+		String userName = "<";
+		if(usr.getGroup() != null){
+			userName+= usr.getGroup().getColor() + "[" + usr.getGroup().getName() + "]";
 		}
-		String chatMessage = SpecialChars.RESET + event.message;
+		if(usr.hasNick()){
+			userName+= usr.getColor().toString() + "~" + usr.getNick() + "";
+		}else{
+			userName+= usr.getColor().toString() + "" + usr.getUserName()+ "";
+		}
+		String chatMessage = SpecialChars.RESET + "> " + event.message;
 		String textMessage = userName + chatMessage;
 		
 		event.component = new ChatComponentTranslation(textMessage);

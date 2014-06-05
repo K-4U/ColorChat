@@ -1,8 +1,8 @@
 package k4unl.minecraft.colorchat;
 
-import k4unl.minecraft.colorchat.commands.CommandNick;
 import k4unl.minecraft.colorchat.commands.Commands;
 import k4unl.minecraft.colorchat.events.EventHelper;
+import k4unl.minecraft.colorchat.lib.Groups;
 import k4unl.minecraft.colorchat.lib.Log;
 import k4unl.minecraft.colorchat.lib.Users;
 import k4unl.minecraft.colorchat.lib.config.ModInfo;
@@ -15,7 +15,7 @@ import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
 
-
+//TODO: color server messages too
 
 @Mod(
 	modid = ModInfo.ID,
@@ -39,6 +39,7 @@ public class ColorChat {
 	public void preInit(FMLPreInitializationEvent event){
 		Log.init();
 		Users.init();
+		Groups.init();
 	}
 	
 	@EventHandler

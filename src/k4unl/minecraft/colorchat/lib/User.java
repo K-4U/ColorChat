@@ -6,6 +6,7 @@ public class User {
 	private String nick;
 	private String realUserName;
 	private boolean hasNick;
+	private Group group;
 	
 	public User(String _username, SpecialChars _userColor, String _nick){
 		realUserName = _username;
@@ -45,5 +46,12 @@ public class User {
 
 	public boolean hasNick() {
 		return hasNick;
+	}
+	
+	public Group getGroup(){
+		return group;
+	}
+	public void setGroup(Group newGroup){
+		group = newGroup;
 	}
 }

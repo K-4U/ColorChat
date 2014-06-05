@@ -43,15 +43,19 @@ public class CommandColor extends CommandBase{
 
 	@Override
 	public String getCommandUsage(ICommandSender sender) {
-		return "color name";
+		return "/color " + getColors();
 	}
 
-	public void printColors(ICommandSender sender){
-		String colorString = "Available colors are ";
+	public String getColors(){
+		String colorString = "";
 		for(String c: colors.keySet()){
 			colorString += ", " + c;
 		}
-		sender.addChatMessage(new ChatComponentText(colorString));
+		return colorString;
+	}
+	
+	public void printColors(ICommandSender sender){
+		sender.addChatMessage(new ChatComponentText("Available colors are " + getColors()));
 	}
 	
 	@Override

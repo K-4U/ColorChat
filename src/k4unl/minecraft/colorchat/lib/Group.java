@@ -14,4 +14,16 @@ public class Group {
 		groupName = _groupName;
 		groupColor = SpecialChars.getRandom();
 	}
+
+	public String getName() {
+		return groupName;
+	}
+	
+	public SpecialChars getColor(){
+		return groupColor;
+	}
+
+	public void setColor(SpecialChars newColor) {
+		groupColor = newColor;
+	}
 }
