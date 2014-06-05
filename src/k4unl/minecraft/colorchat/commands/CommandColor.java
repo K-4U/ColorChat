@@ -1,8 +1,10 @@
 package k4unl.minecraft.colorchat.commands;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Random;
 
 import k4unl.minecraft.colorchat.lib.SpecialChars;
 import k4unl.minecraft.colorchat.lib.User;
@@ -59,8 +61,14 @@ public class CommandColor extends CommandBase{
 			printColors(sender);
 		}else{
 			String clr = var2[0].toLowerCase();
-			if(clr == "help"){
+			if(clr.equals("help")){
 				printColors(sender);
+			}else if(clr.equals("random")){
+				List<String> keysAsArray = new ArrayList<String>(colors.keySet());
+				String newClr = keysAsArray.get(new Random().nextInt(keysAsArray.size()));
+				
+				sndr.setUserColor(colors.get(newClr));
+				sender.addChatMessage(new ChatComponentText("Your color has now been set to " + colors.get(newClr) + newClr));
 			}else if(colors.containsKey(clr)){
 				sndr.setUserColor(colors.get(clr));
 				sender.addChatMessage(new ChatComponentText("Your color has now been set to " + colors.get(clr) + clr));

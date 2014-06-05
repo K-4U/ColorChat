@@ -8,5 +8,7 @@ public class Commands {
 	public static void init(FMLServerStartingEvent event){
 		event.registerServerCommand(new CommandNick());
 		event.registerServerCommand(new CommandColor());
+		event.registerServerCommand(new CommandRealName());
+		event.registerServerCommand(new CommandGroup());
 	}
 }
