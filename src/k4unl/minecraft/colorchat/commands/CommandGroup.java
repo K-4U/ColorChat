@@ -11,14 +11,15 @@ import k4unl.minecraft.colorchat.lib.User;
 import k4unl.minecraft.colorchat.lib.Users;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
 
 public class CommandGroup extends CommandBase{
 
 	@Override
-	public int getRequiredPermissionLevel(){
-        return 3;
-    }
+	public boolean canCommandSenderUseCommand(ICommandSender sender){
+		return MinecraftServer.getServer().getConfigurationManager().isPlayerOpped(getCommandSenderAsPlayer(sender).getDisplayName());
+	}
 
 	
 	@Override

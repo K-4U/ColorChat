@@ -2,7 +2,6 @@ package k4unl.minecraft.colorchat.events;
 
 import java.util.List;
 
-import k4unl.minecraft.colorchat.lib.Log;
 import k4unl.minecraft.colorchat.lib.SpecialChars;
 import k4unl.minecraft.colorchat.lib.User;
 import k4unl.minecraft.colorchat.lib.Users;
@@ -21,7 +20,7 @@ public class EventHelper {
 	
 	@SubscribeEvent
 	public void chatEvent(ServerChatEvent event){
-		Log.info("We got a chat message: " + event.username + ":" + event.message);
+		//Log.info("We got a chat message: " + event.username + ":" + event.message);
 		
 		ChatComponentTranslation orig = event.component.createCopy();
 		List siblings = orig.getSiblings();

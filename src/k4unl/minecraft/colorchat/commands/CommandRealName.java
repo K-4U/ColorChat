@@ -10,9 +10,10 @@ import net.minecraft.util.ChatComponentText;
 
 public class CommandRealName extends CommandBase{
 
-	public int getRequiredPermissionLevel(){
-        return 5;
-    }
+	@Override
+	public boolean canCommandSenderUseCommand(ICommandSender par1iCommandSender){
+		return true;
+	}
 	
 	@Override
 	public String getCommandName() {

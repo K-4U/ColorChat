@@ -15,9 +15,10 @@ import net.minecraft.util.ChatComponentText;
 
 public class CommandColor extends CommandBase{
 
-	public int getRequiredPermissionLevel(){
-        return 0;
-    }
+	@Override
+	public boolean canCommandSenderUseCommand(ICommandSender par1iCommandSender){
+		return true;
+	}
 	
 	public static Map<String, SpecialChars> colors = new HashMap<String, SpecialChars>(); 
 	

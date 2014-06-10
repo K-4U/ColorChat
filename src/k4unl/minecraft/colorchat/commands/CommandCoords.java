@@ -9,9 +9,10 @@ import net.minecraft.util.ChatComponentText;
 
 public class CommandCoords extends CommandBase{
 
-	public int getRequiredPermissionLevel(){
-        return 0;
-    }
+	@Override
+	public boolean canCommandSenderUseCommand(ICommandSender par1iCommandSender){
+		return true;
+	}
 	
 	@Override
 	public String getCommandName() {
