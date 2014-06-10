@@ -2,36 +2,27 @@ package k4unl.minecraft.colorchat.commands;
 
 import java.util.List;
 
-import k4unl.minecraft.colorchat.lib.User;
-import k4unl.minecraft.colorchat.lib.Users;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ChatComponentText;
 
-public class CommandNick extends CommandBase{
+public class CommandCoords extends CommandBase{
 
 	@Override
 	public String getCommandName() {
-		return "nick";
+		return "coords";
 	}
 
 	@Override
 	public String getCommandUsage(ICommandSender sender) {
-		return "/nick <nick>. Leave nick empty to reset";
+		return "/coords. Print coördinates you're at.";
 	}
 
 	@Override
 	public void processCommand(ICommandSender sender, String[] var2) {
-		User sndr = Users.getUserByName(sender.getCommandSenderName());
-		if(var2.length == 0){
-			sndr.resetNick();
-			sender.addChatMessage(new ChatComponentText("Nick is reset!"));
-		}else{
-			sndr.setNick(var2[0]);
-			sender.addChatMessage(new ChatComponentText("Nick is set to " + var2[0]));
-			
-		}
-		
+		String senderCoords = "[" + sender.getPlayerCoordinates().posX + ", " + sender.getPlayerCoordinates().posY + ", " + sender.getPlayerCoordinates().posZ + "]";
+		((EntityPlayerMP)sender).mcServer.getConfigurationManager().sendChatMsg(new ChatComponentText(senderCoords));
 	}
 
 	@Override

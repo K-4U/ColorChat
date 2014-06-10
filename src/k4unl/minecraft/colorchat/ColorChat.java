@@ -20,7 +20,8 @@ import cpw.mods.fml.common.event.FMLServerStartingEvent;
 @Mod(
 	modid = ModInfo.ID,
 	name = ModInfo.NAME,
-	version = ModInfo.VERSION
+	version = ModInfo.VERSION,
+	acceptableRemoteVersions="*"
 )
 
 

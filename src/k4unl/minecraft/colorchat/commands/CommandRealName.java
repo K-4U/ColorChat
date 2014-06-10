@@ -17,7 +17,7 @@ public class CommandRealName extends CommandBase{
 
 	@Override
 	public String getCommandUsage(ICommandSender sender) {
-		return "";
+		return "/realname <nick>";
 	}
 
 	@Override
