@@ -6,7 +6,6 @@ import k4unl.minecraft.colorchat.lib.Groups;
 import k4unl.minecraft.colorchat.lib.Log;
 import k4unl.minecraft.colorchat.lib.Users;
 import k4unl.minecraft.colorchat.lib.config.ModInfo;
-import k4unl.minecraft.colorchat.network.PacketPipeline;
 import cpw.mods.fml.common.Mod;
 import cpw.mods.fml.common.Mod.EventHandler;
 import cpw.mods.fml.common.Mod.Instance;
@@ -44,10 +43,7 @@ public class ColorChat {
 	}
 	
 	@EventHandler
-	public void load(FMLInitializationEvent event){
-		
-		PacketPipeline.init();
-		
+	public void load(FMLInitializationEvent event){		
 		//proxy.init();
 		//NetworkRegistry.
 		EventHelper.init();
