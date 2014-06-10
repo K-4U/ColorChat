@@ -1,5 +1,6 @@
 package k4unl.minecraft.colorchat;
 
+import net.minecraftforge.common.DimensionManager;
 import k4unl.minecraft.colorchat.commands.Commands;
 import k4unl.minecraft.colorchat.events.EventHelper;
 import k4unl.minecraft.colorchat.lib.Groups;
@@ -13,8 +14,7 @@ import cpw.mods.fml.common.event.FMLInitializationEvent;
 import cpw.mods.fml.common.event.FMLPostInitializationEvent;
 import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 import cpw.mods.fml.common.event.FMLServerStartingEvent;
-
-//TODO: color server messages too
+import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 
 @Mod(
 	modid = ModInfo.ID,
@@ -28,13 +28,6 @@ public class ColorChat {
 	@Instance(value=ModInfo.ID)
 	public static ColorChat instance;
 
-	/*
-	@SidedProxy(
-			//clientSide = ModInfo.PROXY_LOCATION + ".ClientProxy",
-			serverSide = ModInfo.PROXY_LOCATION + ".CommonProxy"
-	)
-	public static CommonProxy proxy;
-	*/
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event){
 		Log.init();
@@ -44,8 +37,6 @@ public class ColorChat {
 	
 	@EventHandler
 	public void load(FMLInitializationEvent event){		
-		//proxy.init();
-		//NetworkRegistry.
 		EventHelper.init();
 	}
 	
@@ -58,5 +49,17 @@ public class ColorChat {
 	@EventHandler
 	public void onServerStart(FMLServerStartingEvent event) {
 		Commands.init(event);
+	}
+	
+	@EventHandler
+	public void serverStart(FMLServerStartingEvent event){
+		Users.readFromFile(DimensionManager.getCurrentSaveRootDirectory());
+		Groups.readFromFile(DimensionManager.getCurrentSaveRootDirectory());
+	}
+	
+	@EventHandler
+	public void serverStop(FMLServerStoppingEvent event){
+		Users.saveToFile(DimensionManager.getCurrentSaveRootDirectory());
+		Groups.saveToFile(DimensionManager.getCurrentSaveRootDirectory());		
 	}
 }

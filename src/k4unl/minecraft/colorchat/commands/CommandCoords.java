@@ -9,6 +9,10 @@ import net.minecraft.util.ChatComponentText;
 
 public class CommandCoords extends CommandBase{
 
+	public int getRequiredPermissionLevel(){
+        return 0;
+    }
+	
 	@Override
 	public String getCommandName() {
 		return "coords";
@@ -21,7 +25,7 @@ public class CommandCoords extends CommandBase{
 
 	@Override
 	public void processCommand(ICommandSender sender, String[] var2) {
-		String senderCoords = "[" + sender.getPlayerCoordinates().posX + ", " + sender.getPlayerCoordinates().posY + ", " + sender.getPlayerCoordinates().posZ + "]";
+		String senderCoords = sender.getCommandSenderName() + " is at [" + sender.getPlayerCoordinates().posX + ", " + sender.getPlayerCoordinates().posY + ", " + sender.getPlayerCoordinates().posZ + "]";
 		((EntityPlayerMP)sender).mcServer.getConfigurationManager().sendChatMsg(new ChatComponentText(senderCoords));
 	}
 

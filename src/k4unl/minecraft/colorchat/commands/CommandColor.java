@@ -15,7 +15,11 @@ import net.minecraft.util.ChatComponentText;
 
 public class CommandColor extends CommandBase{
 
-	private static Map<String, SpecialChars> colors = new HashMap<String, SpecialChars>(); 
+	public int getRequiredPermissionLevel(){
+        return 0;
+    }
+	
+	public static Map<String, SpecialChars> colors = new HashMap<String, SpecialChars>(); 
 	
 	static {
 		colors.put("black", SpecialChars.BLACK);
@@ -46,7 +50,7 @@ public class CommandColor extends CommandBase{
 		return "/color " + getColors();
 	}
 
-	public String getColors(){
+	public static String getColors(){
 		String colorString = "";
 		for(String c: colors.keySet()){
 			colorString += ", " + c;
@@ -54,7 +58,7 @@ public class CommandColor extends CommandBase{
 		return colorString;
 	}
 	
-	public void printColors(ICommandSender sender){
+	public static void printColors(ICommandSender sender){
 		sender.addChatMessage(new ChatComponentText("Available colors are " + getColors()));
 	}
 	

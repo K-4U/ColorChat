@@ -1,6 +1,8 @@
 package k4unl.minecraft.colorchat.commands;
 
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import k4unl.minecraft.colorchat.lib.Group;
 import k4unl.minecraft.colorchat.lib.Groups;
@@ -26,7 +28,7 @@ public class CommandGroup extends CommandBase{
 
 	@Override
 	public String getCommandUsage(ICommandSender sender) {
-		return "/group [create <name>]";
+		return "/group [list]/[create <name>]/[addUser <group> <name>]/[color <group> <color>]";
 	}
 
 	@Override
@@ -51,12 +53,42 @@ public class CommandGroup extends CommandBase{
 						sender.addChatMessage(new ChatComponentText("This group does not exist"));
 					}else{
 						Group g = Groups.getGroupByName(var2[1]);
-						User sndr = Users.getUserByName(sender.getCommandSenderName());
-						sndr.setGroup(g);
+						User sndr = Users.getUserByName(var2[2]);
+						if(sndr.getGroup() != null && sndr.getGroup().equals(g)){
+							sender.addChatMessage(new ChatComponentText(sndr.getColor() + sndr.getUserName() + SpecialChars.RESET + " is already in this group."));
+						}else{
+							sndr.setGroup(g);
+							sender.addChatMessage(new ChatComponentText("Added " + sndr.getColor() + sndr.getUserName() + SpecialChars.RESET +  " to " + g.getColor() + g.getName()));
+						}
 					}
 				}else{
 					sender.addChatMessage(new ChatComponentText("Usage: /group addUser <groupName> <userName>"));
 				}
+			}else if(var2[0].equals("color")){
+				if(var2.length == 3){
+					if(Groups.getGroupByName(var2[1]) == null){
+						sender.addChatMessage(new ChatComponentText("This group does not exist"));
+					}else{
+						String clr = var2[2].toLowerCase();
+						Group g = Groups.getGroupByName(var2[1]);
+						if(clr.equals("help")){
+							CommandColor.printColors(sender);
+						}else if(clr.equals("random")){
+							List<String> keysAsArray = new ArrayList<String>(CommandColor.colors.keySet());
+							String newClr = keysAsArray.get(new Random().nextInt(keysAsArray.size()));
+							
+							g.setColor(CommandColor.colors.get(newClr));
+							sender.addChatMessage(new ChatComponentText("The group color has now been set to " + CommandColor.colors.get(newClr) + newClr));
+						}else if(CommandColor.colors.containsKey(clr)){
+							g.setColor(CommandColor.colors.get(clr));
+							sender.addChatMessage(new ChatComponentText("The group color has now been set to " + CommandColor.colors.get(clr) + clr));
+						}else{
+							CommandColor.printColors(sender);
+						}
+					}
+				}
+			}else if(var2[0].equals("list")){
+				sender.addChatMessage(new ChatComponentText(Groups.getGroupNames()));
 			}
 		}
 	}
