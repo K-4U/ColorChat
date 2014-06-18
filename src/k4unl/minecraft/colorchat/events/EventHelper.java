@@ -37,7 +37,7 @@ public class EventHelper {
 		}else{
 			userName+= usr.getColor().toString() + "" + usr.getUserName()+ "";
 		}
-		String chatMessage = SpecialChars.RESET + "> " + event.message;
+		String chatMessage = SpecialChars.RESET + "> " + event.message.replaceAll("%", "%%");
 		String textMessage = userName + chatMessage;
 		
 		event.component = new ChatComponentTranslation(textMessage);
