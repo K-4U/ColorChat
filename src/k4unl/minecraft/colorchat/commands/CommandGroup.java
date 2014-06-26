@@ -18,7 +18,8 @@ public class CommandGroup extends CommandBase{
 
 	@Override
 	public boolean canCommandSenderUseCommand(ICommandSender sender){
-		return MinecraftServer.getServer().getConfigurationManager().isPlayerOpped(getCommandSenderAsPlayer(sender).getDisplayName());
+		
+		return MinecraftServer.getServer().getConfigurationManager().func_152596_g(getCommandSenderAsPlayer(sender).getGameProfile());
 	}
 
 	
