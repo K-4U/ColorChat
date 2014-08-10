@@ -10,6 +10,7 @@ import k4unl.minecraft.colorchat.lib.SpecialChars;
 import k4unl.minecraft.colorchat.lib.User;
 import k4unl.minecraft.colorchat.lib.Users;
 import k4unl.minecraft.colorchat.lib.config.Config;
+import k4unl.minecraft.colorchat.lib.config.ConfigHandler;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.ChatComponentText;
@@ -55,7 +56,9 @@ public class CommandColor extends CommandBase{
 	public static String getColors(){
 		String colorString = "";
 		for(String c: colors.keySet()){
-			colorString += ", " + c;
+            if(!Config.isColorBlackListed(c)){
+			    colorString += ", " + c;
+            }
 		}
 		return colorString;
 	}
