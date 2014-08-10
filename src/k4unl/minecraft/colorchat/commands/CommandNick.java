@@ -32,6 +32,7 @@ public class CommandNick extends CommandBase{
 			sndr.resetNick();
 			sender.addChatMessage(new ChatComponentText("Nick is reset!"));
 		}else{
+            var2[0] = var2[0].replace("[", "").replace("]", "");
 			sndr.setNick(var2[0]);
 			sender.addChatMessage(new ChatComponentText("Nick is set to " + var2[0]));
 			
