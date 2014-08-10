@@ -1,5 +1,6 @@
 package k4unl.minecraft.colorchat;
 
+import k4unl.minecraft.colorchat.lib.config.ConfigHandler;
 import net.minecraftforge.common.DimensionManager;
 import k4unl.minecraft.colorchat.commands.Commands;
 import k4unl.minecraft.colorchat.events.EventHelper;
@@ -31,6 +32,7 @@ public class ColorChat {
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event){
 		Log.init();
+        ConfigHandler.init(event.getSuggestedConfigurationFile());
 		Users.init();
 		Groups.init();
 	}

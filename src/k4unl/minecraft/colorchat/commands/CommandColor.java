@@ -9,6 +9,7 @@ import java.util.Random;
 import k4unl.minecraft.colorchat.lib.SpecialChars;
 import k4unl.minecraft.colorchat.lib.User;
 import k4unl.minecraft.colorchat.lib.Users;
+import k4unl.minecraft.colorchat.lib.config.Config;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.ChatComponentText;
@@ -73,14 +74,21 @@ public class CommandColor extends CommandBase{
 			if(clr.equals("help")){
 				printColors(sender);
 			}else if(clr.equals("random")){
-				List<String> keysAsArray = new ArrayList<String>(colors.keySet());
-				String newClr = keysAsArray.get(new Random().nextInt(keysAsArray.size()));
+                List<String> keysAsArray = new ArrayList<String>(colors.keySet());
+                String newClr = keysAsArray.get(new Random().nextInt(keysAsArray.size()));
+                while(Config.isColorBlackListed(newClr)){
+				    newClr = keysAsArray.get(new Random().nextInt(keysAsArray.size()));
+                }
 				
 				sndr.setUserColor(colors.get(newClr));
 				sender.addChatMessage(new ChatComponentText("Your color has now been set to " + colors.get(newClr) + newClr));
 			}else if(colors.containsKey(clr)){
-				sndr.setUserColor(colors.get(clr));
-				sender.addChatMessage(new ChatComponentText("Your color has now been set to " + colors.get(clr) + clr));
+                if(Config.isColorBlackListed(clr)){
+                    sender.addChatMessage(new ChatComponentText(colors.get("red") + "This color has been blacklisted. Try another color!"));
+                }else{
+				    sndr.setUserColor(colors.get(clr));
+				    sender.addChatMessage(new ChatComponentText("Your color has now been set to " + colors.get(clr) + clr));
+                }
 			}else{
 				printColors(sender);
 			}

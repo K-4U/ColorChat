@@ -9,6 +9,7 @@ import k4unl.minecraft.colorchat.lib.Groups;
 import k4unl.minecraft.colorchat.lib.SpecialChars;
 import k4unl.minecraft.colorchat.lib.User;
 import k4unl.minecraft.colorchat.lib.Users;
+import k4unl.minecraft.colorchat.lib.config.Config;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.server.MinecraftServer;
@@ -76,14 +77,22 @@ public class CommandGroup extends CommandBase{
 						if(clr.equals("help")){
 							CommandColor.printColors(sender);
 						}else if(clr.equals("random")){
-							List<String> keysAsArray = new ArrayList<String>(CommandColor.colors.keySet());
-							String newClr = keysAsArray.get(new Random().nextInt(keysAsArray.size()));
-							
+                            List<String> keysAsArray = new ArrayList<String>(CommandColor.colors.keySet());
+                            String newClr = keysAsArray.get(new Random().nextInt(keysAsArray.size()));
+                            while(Config.isColorBlackListed(newClr)){
+                                newClr = keysAsArray.get(new Random().nextInt(keysAsArray.size()));
+                            }
+
 							g.setColor(CommandColor.colors.get(newClr));
 							sender.addChatMessage(new ChatComponentText("The group color has now been set to " + CommandColor.colors.get(newClr) + newClr));
 						}else if(CommandColor.colors.containsKey(clr)){
-							g.setColor(CommandColor.colors.get(clr));
-							sender.addChatMessage(new ChatComponentText("The group color has now been set to " + CommandColor.colors.get(clr) + clr));
+                            if(Config.isColorBlackListed(clr)){
+                                sender.addChatMessage(new ChatComponentText(CommandColor.colors.get("red") + "This color has been blacklisted. Try " +
+                                  "another color!"));
+                            }else{
+                                g.setColor(CommandColor.colors.get(clr));
+                                sender.addChatMessage(new ChatComponentText("The group color has now been set to " + CommandColor.colors.get(clr) + clr));
+                            }
 						}else{
 							CommandColor.printColors(sender);
 						}

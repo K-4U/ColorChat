@@ -48,12 +48,15 @@ public class Config {
 		}
 	}
 	private static final List<configOption> configOptions = new ArrayList<configOption>();
-	
+	private static String[] blacklistedColors;
+
 	static {
 
 	}
 	
 	public static void loadConfigOptions(Configuration c){
+        blacklistedColors = c.get(c.CATEGORY_GENERAL, "blacklistColors", new String[] {"darkblue", "black"}).getStringList();
+
 		for(configOption config : configOptions){
 			config.loadFromConfig(c);
 		}
@@ -75,4 +78,13 @@ public class Config {
 		}
 		return 0;
 	}
+
+    public static boolean isColorBlackListed(String color){
+        for(String blackListed : blacklistedColors){
+            if(blackListed.equals(color)){
+                return true;
+            }
+        }
+        return false;
+    }
 }
