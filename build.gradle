@@ -27,12 +27,17 @@ buildscript {
 
 apply plugin: 'forge'
 
-version = "1.7.10-0.1.0"
+project.ext {
+    buildNum = System.getenv("BUILD_NUMBER")
+    mcVersion="1.7.10"
+}
+
+version = "0.1.0"
 group= "k4unl.minecraft.colorChat" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "colorchat"
 
 minecraft {
-    version = "1.7.10-10.13.0.1150"
+    version = "${project.ext.mcVersion}-10.13.0.1150"
     assetDir = "../minecraft/assets"
     replace "@VERSION@", project.version
 	replace "@BUILDNUM@", System.getenv().BUILD_NUMBER
@@ -73,4 +78,9 @@ processResources
     from(sourceSets.main.resources.srcDirs) {
         exclude 'mcmod.info'
     }
+}
+
+jar {
+    appendix = "${project.ext.mcVersion}"
+    classifier = "${project.ext.buildNum}"
 }
