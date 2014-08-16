@@ -31,15 +31,6 @@ version = "1.7.10-0.1.0"
 group= "k4unl.minecraft.colorChat" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "colorchat"
 
-if (System.getenv().BUILD_NUMBER != null){
-    version += ".${System.getenv().BUILD_NUMBER}"
-}else{
-    version += " - err"
-	System.getenv().BUILD_NUMBER = 0
-}
-
-
-
 minecraft {
     version = "1.7.10-10.13.0.1150"
     assetDir = "../minecraft/assets"

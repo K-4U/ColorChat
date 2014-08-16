@@ -1,26 +1,27 @@
 package k4unl.minecraft.colorchat.commands;
 
+import k4unl.minecraft.colorchat.lib.*;
+import k4unl.minecraft.colorchat.lib.config.Config;
+import net.minecraft.command.ICommand;
+import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.ChatComponentText;
+import net.minecraftforge.common.DimensionManager;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import k4unl.minecraft.colorchat.lib.Group;
-import k4unl.minecraft.colorchat.lib.Groups;
-import k4unl.minecraft.colorchat.lib.SpecialChars;
-import k4unl.minecraft.colorchat.lib.User;
-import k4unl.minecraft.colorchat.lib.Users;
-import k4unl.minecraft.colorchat.lib.config.Config;
-import net.minecraft.command.CommandBase;
-import net.minecraft.command.ICommandSender;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ChatComponentText;
-
-public class CommandGroup extends CommandBase{
+public class CommandGroup implements ICommand {
 
 	@Override
 	public boolean canCommandSenderUseCommand(ICommandSender sender){
-		
-		return MinecraftServer.getServer().getConfigurationManager().func_152596_g(getCommandSenderAsPlayer(sender).getGameProfile());
+        if(sender instanceof EntityPlayerMP){
+            return MinecraftServer.getServer().getConfigurationManager().func_152596_g(((EntityPlayerMP) sender).getGameProfile());
+        } else {
+            return true;
+        }
 	}
 
 	
@@ -31,10 +32,16 @@ public class CommandGroup extends CommandBase{
 
 	@Override
 	public String getCommandUsage(ICommandSender sender) {
-		return "/group [list]/[create <name>]/[addUser <group> <name>]/[color <group> <color>]";
+		return "/group [list]/[create <name>]/[remove <name>]/[addUser <group> <name>]/[delUser <group> <name>]/[color <group> <color>]/[save]/[load]";
 	}
 
-	@Override
+    @Override
+    public List getCommandAliases() {
+
+        return null;
+    }
+
+    @Override
 	public void processCommand(ICommandSender sender, String[] var2) {
 		if(var2.length == 0){
 			sender.addChatMessage(new ChatComponentText("Usage: " + getCommandUsage(sender)));
@@ -50,6 +57,24 @@ public class CommandGroup extends CommandBase{
 				}else{
 					sender.addChatMessage(new ChatComponentText("Usage: /group create <name>"));
 				}
+            }else if(var2[0].equals("remove")){
+                if(var2.length == 2){
+                    if(Groups.getGroupByName(var2[1]) != null){
+                        Group g = Groups.getGroupByName(var2[1]);
+                        sender.addChatMessage(new ChatComponentText("Group " + g.getColor() + var2[1] + "" + SpecialChars.RESET + " has been removed"));
+                        Groups.removeGroupByName(var2[1]);
+                    }else{
+                        sender.addChatMessage(new ChatComponentText("This group doesn't exists"));
+                    }
+                }else{
+                    sender.addChatMessage(new ChatComponentText("Usage: /group remove <name>"));
+                }
+            }else if(var2[0].equals("save")){
+                Groups.saveToFile(DimensionManager.getCurrentSaveRootDirectory());
+                sender.addChatMessage(new ChatComponentText("Groups saved to file!"));
+            }else if(var2[0].equals("load")){
+                Groups.readFromFile(DimensionManager.getCurrentSaveRootDirectory());
+                sender.addChatMessage(new ChatComponentText("Groups loaded from file!"));
 			}else if(var2[0].equals("addUser")){
 				if(var2.length == 3){
 					if(Groups.getGroupByName(var2[1]) == null){
@@ -67,6 +92,23 @@ public class CommandGroup extends CommandBase{
 				}else{
 					sender.addChatMessage(new ChatComponentText("Usage: /group addUser <groupName> <userName>"));
 				}
+            }else if(var2[0].equals("delUser")){
+                if(var2.length == 3){
+                    if(Groups.getGroupByName(var2[1]) == null){
+                        sender.addChatMessage(new ChatComponentText("This group does not exist"));
+                    }else{
+                        Group g = Groups.getGroupByName(var2[1]);
+                        User sndr = Users.getUserByName(var2[2]);
+                        if(sndr.getGroup() != null && sndr.getGroup().equals(g)){
+                            sndr.setGroup(null);
+                            sender.addChatMessage(new ChatComponentText(sndr.getColor() + sndr.getUserName() + SpecialChars.RESET + " is removed from " + g.getColor() + g.getName()));
+                        }else{
+                            sender.addChatMessage(new ChatComponentText(sndr.getColor() + sndr.getUserName() + SpecialChars.RESET + " is not in this group"));
+                        }
+                    }
+                }else{
+                    sender.addChatMessage(new ChatComponentText("Usage: /group delUser <groupName> <userName>"));
+                }
 			}else if(var2[0].equals("color")){
 				if(var2.length == 3){
 					if(Groups.getGroupByName(var2[1]) == null){
@@ -108,4 +150,16 @@ public class CommandGroup extends CommandBase{
 	public List addTabCompletionOptions(ICommandSender sender, String[] var2) {
 		return null;
 	}
+
+    @Override
+    public boolean isUsernameIndex(String[] p_82358_1_, int p_82358_2_) {
+
+        return false;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+
+        return 0;
+    }
 }

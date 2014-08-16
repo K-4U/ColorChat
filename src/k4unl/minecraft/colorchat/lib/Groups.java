@@ -1,18 +1,12 @@
 package k4unl.minecraft.colorchat.lib;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
+
+import java.io.*;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
-
-import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
 
 public class Groups {
 	private static List<Group> groupList;
@@ -38,6 +32,14 @@ public class Groups {
 		}
 		return g;
 	}
+
+    public static void removeGroupByName(String name) {
+        Group g = getGroupByName(name);
+        Users.removeGroupFromUsers(g);
+        if(g != null){
+            groupList.remove(g);
+        }
+    }
 	
 	public static boolean setGroupColor(String name, SpecialChars newColor){
 		Group g = getGroupByName(name);
@@ -47,7 +49,6 @@ public class Groups {
 			g.setColor(newColor);
 			return true;
 		}
-		
 	}
 	
 	public static void readFromFile(File dir){
@@ -80,7 +81,7 @@ public class Groups {
 					groupList = new ArrayList<Group>();
 				}
 				
-				//Log.info("Read from file: " + json);
+				Log.info("Read from file: " + json);
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
@@ -125,4 +126,5 @@ public class Groups {
 		}
 		return all;
 	}
+
 }
