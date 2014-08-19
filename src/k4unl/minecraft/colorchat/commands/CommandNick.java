@@ -1,12 +1,12 @@
 package k4unl.minecraft.colorchat.commands;
 
-import java.util.List;
-
-import k4unl.minecraft.colorchat.lib.User;
-import k4unl.minecraft.colorchat.lib.Users;
+import k4unl.minecraft.colorchat.lib.*;
+import k4unl.minecraft.colorchat.lib.config.Config;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.ChatComponentText;
+
+import java.util.List;
 
 public class CommandNick extends CommandBase{
 
@@ -29,15 +29,28 @@ public class CommandNick extends CommandBase{
 	public void processCommand(ICommandSender sender, String[] var2) {
 		User sndr = Users.getUserByName(sender.getCommandSenderName());
 		if(var2.length == 0){
-			sndr.resetNick();
+            if(Config.getBool("announceNickChanges")){
+                Functions.sendChatMessageServerWide(sender.getEntityWorld(), new ChatComponentText(SpecialChars.GOLD + sndr.getNick() + "(" + sndr.getUserName() + ") is now called " + sndr.getUserName()));
+            }
+            sndr.resetNick();
 			sender.addChatMessage(new ChatComponentText("Nick is reset!"));
 		}else{
             var2[0] = var2[0].replace("[", "").replace("]", "");
-			sndr.setNick(var2[0]);
-			sender.addChatMessage(new ChatComponentText("Nick is set to " + var2[0]));
-			
+            if(Config.isNickBlackListed(var2[0])){
+                Log.error(sndr.getUserName() + " tried to set a banned nick (" + var2[0] + ")");
+                sender.addChatMessage(new ChatComponentText(SpecialChars.RED + "This nick is banned! You have been reported!"));
+                return;
+            }
+            if(var2[0].length() >= Config.getInt("minimumNickLength")){
+                if(Config.getBool("announceNickChanges")){
+                    Functions.sendChatMessageServerWide(sender.getEntityWorld(), new ChatComponentText(SpecialChars.GOLD + "~" + sndr.getNick() + "(" + sndr.getUserName() + ") is now called " + var2[0]));
+                }
+                sndr.setNick(var2[0]);
+                sender.addChatMessage(new ChatComponentText("Nick is set to " + var2[0]));
+            }else{
+                sender.addChatMessage(new ChatComponentText("Your nick should be at least " + Config.getInt("minimumNickLength") + " characters long."));
+            }
 		}
-		
 	}
 
 	@Override

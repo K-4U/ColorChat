@@ -1,9 +1,9 @@
 package k4unl.minecraft.colorchat.lib.config;
 
+import net.minecraftforge.common.config.Configuration;
+
 import java.util.ArrayList;
 import java.util.List;
-
-import net.minecraftforge.common.config.Configuration;
 
 public class Config {
 	private static class configOption{
@@ -49,13 +49,17 @@ public class Config {
 	}
 	private static final List<configOption> configOptions = new ArrayList<configOption>();
 	private static String[] blacklistedColors;
+    private static String[] blacklistedNicks;
+    private static String[] blacklistedSymbols;
 
 	static {
-
+        configOptions.add(new configOption("minimumNickLength", 4));
+        configOptions.add(new configOption("announceNickChanges", true));
 	}
 	
 	public static void loadConfigOptions(Configuration c){
         blacklistedColors = c.get(c.CATEGORY_GENERAL, "blacklistColors", new String[] {"darkblue", "black"}).getStringList();
+        blacklistedNicks = c.get(c.CATEGORY_GENERAL, "blacklistNicks", new String[] {"K4Unl", "Direwolf20", "Quetzi", "Krystal_Raven"}).getStringList();
 
 		for(configOption config : configOptions){
 			config.loadFromConfig(c);
@@ -87,4 +91,16 @@ public class Config {
         }
         return false;
     }
+
+    public static boolean isNickBlackListed(String nick){
+        for(String blackListed : blacklistedNicks){
+            if(blackListed.equalsIgnoreCase(nick)){
+                return true;
+            }
+        }
+        return false;
+    }
+
+
 }
+

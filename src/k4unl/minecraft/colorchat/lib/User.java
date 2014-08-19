@@ -37,7 +37,11 @@ public class User {
 	}
 	
 	public String getNick(){
-		return nick;
+        if(hasNick){
+		    return nick;
+        }else{
+            return realUserName;
+        }
 	}
 	
 	public SpecialChars getColor(){
