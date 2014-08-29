@@ -55,6 +55,7 @@ public class Config {
 	static {
         configOptions.add(new configOption("minimumNickLength", 4));
         configOptions.add(new configOption("announceNickChanges", true));
+        configOptions.add(new configOption("nickChangeOPOnly", false));
 	}
 	
 	public static void loadConfigOptions(Configuration c){

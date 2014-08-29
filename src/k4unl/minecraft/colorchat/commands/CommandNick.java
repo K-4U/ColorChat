@@ -3,16 +3,27 @@ package k4unl.minecraft.colorchat.commands;
 import k4unl.minecraft.colorchat.lib.*;
 import k4unl.minecraft.colorchat.lib.config.Config;
 import net.minecraft.command.CommandBase;
+import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
 
 import java.util.List;
 
-public class CommandNick extends CommandBase{
+public class CommandNick implements ICommand {
 
 	@Override
-	public boolean canCommandSenderUseCommand(ICommandSender par1iCommandSender){
-		return true;
+	public boolean canCommandSenderUseCommand(ICommandSender sender){
+        if(Config.getBool("nickChangeOPOnly")){
+            if(sender instanceof EntityPlayerMP){
+                return MinecraftServer.getServer().getConfigurationManager().func_152596_g(((EntityPlayerMP) sender).getGameProfile());
+            } else {
+                return true;
+            }
+        }else{
+            return true;
+        }
 	}
 	
 	@Override
@@ -22,31 +33,62 @@ public class CommandNick extends CommandBase{
 
 	@Override
 	public String getCommandUsage(ICommandSender sender) {
-		return "/nick <nick>. Leave nick empty to reset";
+        if(Config.getBool("nickChangeOPOnly")){
+            return "/nick <target> <nick>. Leave nick empty to reset";
+        }else{
+		    return "/nick <nick>. Leave nick empty to reset";
+        }
 	}
 
-	@Override
+    @Override
+    public List getCommandAliases() {
+
+        return null;
+    }
+
+    @Override
 	public void processCommand(ICommandSender sender, String[] var2) {
-		User sndr = Users.getUserByName(sender.getCommandSenderName());
-		if(var2.length == 0){
-            if(Config.getBool("announceNickChanges")){
-                Functions.sendChatMessageServerWide(sender.getEntityWorld(), new ChatComponentText(SpecialChars.GOLD + sndr.getNick() + "(" + sndr.getUserName() + ") is now called " + sndr.getUserName()));
+        User target;
+        String nickToSet;
+        if(Config.getBool("nickChangeOPOnly")){
+            if(var2.length == 0){
+                sender.addChatMessage(new ChatComponentText("Please specify a target"));
+                return;
             }
-            sndr.resetNick();
+            target = Users.getUserByName(var2[0]);
+            if(var2.length == 2){
+                nickToSet = var2[1];
+            }else{
+                nickToSet = "";
+            }
+        }else{
+		    target = Users.getUserByName(sender.getCommandSenderName());
+            if(var2.length == 1){
+                nickToSet = var2[0];
+            }else{
+                nickToSet = "";
+            }
+        }
+		if(nickToSet.equals("")){
+            if(Config.getBool("announceNickChanges")){
+                Functions.sendChatMessageServerWide(sender.getEntityWorld(), new ChatComponentText(SpecialChars.GOLD + target.getNick() + "(" + target.getUserName() + ") is now called " + target.getUserName()));
+            }
+            target.resetNick();
 			sender.addChatMessage(new ChatComponentText("Nick is reset!"));
 		}else{
-            var2[0] = var2[0].replace("[", "").replace("]", "");
-            if(Config.isNickBlackListed(var2[0])){
-                Log.error(sndr.getUserName() + " tried to set a banned nick (" + var2[0] + ")");
+            nickToSet = nickToSet.replace("[", "").replace("]", "");
+            if(Config.isNickBlackListed(nickToSet)){
+                Log.error(target.getUserName() + " tried to set a banned nick (" + nickToSet + ")");
                 sender.addChatMessage(new ChatComponentText(SpecialChars.RED + "This nick is banned! You have been reported!"));
                 return;
             }
-            if(var2[0].length() >= Config.getInt("minimumNickLength")){
+            if(nickToSet.length() >= Config.getInt("minimumNickLength")){
                 if(Config.getBool("announceNickChanges")){
-                    Functions.sendChatMessageServerWide(sender.getEntityWorld(), new ChatComponentText(SpecialChars.GOLD + "~" + sndr.getNick() + "(" + sndr.getUserName() + ") is now called " + var2[0]));
+                    Functions.sendChatMessageServerWide(sender.getEntityWorld(), new ChatComponentText(SpecialChars.GOLD + "~" + target.getNick() +
+                      "(" + target.getUserName() + ") is now called " + nickToSet));
                 }
-                sndr.setNick(var2[0]);
-                sender.addChatMessage(new ChatComponentText("Nick is set to " + var2[0]));
+                target.setNick(nickToSet);
+                sender.addChatMessage(new ChatComponentText("Nick is set to " + nickToSet));
             }else{
                 sender.addChatMessage(new ChatComponentText("Your nick should be at least " + Config.getInt("minimumNickLength") + " characters long."));
             }
@@ -57,4 +99,16 @@ public class CommandNick extends CommandBase{
 	public List addTabCompletionOptions(ICommandSender cmd, String[] args) {
 		return null;
 	}
+
+    @Override
+    public boolean isUsernameIndex(String[] p_82358_1_, int p_82358_2_) {
+
+        return false;
+    }
+
+    @Override
+    public int compareTo(Object o) {
+
+        return 0;
+    }
 }
