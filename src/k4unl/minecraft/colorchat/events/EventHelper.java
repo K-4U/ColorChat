@@ -5,6 +5,7 @@ import java.util.List;
 import k4unl.minecraft.colorchat.lib.SpecialChars;
 import k4unl.minecraft.colorchat.lib.User;
 import k4unl.minecraft.colorchat.lib.Users;
+import k4unl.minecraft.colorchat.lib.config.Config;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.IChatComponent;
 import net.minecraftforge.common.MinecraftForge;
@@ -33,7 +34,11 @@ public class EventHelper {
 			userName+= usr.getGroup().getColor() + "[" + usr.getGroup().getName() + "]";
 		}
 		if(usr.hasNick()){
-			userName+= usr.getColor().toString() + "~" + usr.getNick() + "";
+			userName+= usr.getColor().toString();
+
+            userName+= Config.getChar("leadingSymbolOnNick");
+
+            userName+= usr.getNick() + "";
 		}else{
 			userName+= usr.getColor().toString() + "" + usr.getUserName()+ "";
 		}
