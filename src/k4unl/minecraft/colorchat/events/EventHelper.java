@@ -1,17 +1,13 @@
 package k4unl.minecraft.colorchat.events;
 
-import java.util.List;
-
-import k4unl.minecraft.colorchat.lib.SpecialChars;
+import cpw.mods.fml.common.FMLCommonHandler;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import k4unl.minecraft.colorchat.lib.User;
 import k4unl.minecraft.colorchat.lib.Users;
 import k4unl.minecraft.colorchat.lib.config.Config;
-import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.IChatComponent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ServerChatEvent;
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent;
 
 public class EventHelper {
 	public static void init(){
@@ -22,7 +18,7 @@ public class EventHelper {
 	@SubscribeEvent
 	public void chatEvent(ServerChatEvent event){
 		//Log.info("We got a chat message: " + event.username + ":" + event.message);
-		
+		/*
 		ChatComponentTranslation orig = event.component.createCopy();
 		List siblings = orig.getSiblings();
 		
@@ -50,6 +46,27 @@ public class EventHelper {
 		
 		for(Object s : siblings){
 			event.component.appendSibling((IChatComponent) s);
-		}
+		}*/
 	}
+
+    @SubscribeEvent
+    public void getDisplayNameEvent(PlayerEvent.NameFormat event){
+        User usr = Users.getUserByName(event.username);
+        String displayName = "";
+        if(usr.getGroup() != null){
+            displayName+= usr.getGroup().getColor() + "[" + usr.getGroup().getName() + "]";
+        }
+        if(usr.hasNick()){
+            displayName+= usr.getColor().toString();
+
+            displayName+= Config.getChar("leadingSymbolOnNick");
+
+            displayName+= usr.getNick() + "";
+        }else{
+            displayName+= usr.getColor().toString() + "" + usr.getUserName()+ "";
+        }
+
+        event.displayname = displayName;
+
+    }
 }

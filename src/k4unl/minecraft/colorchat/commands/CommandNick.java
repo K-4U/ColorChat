@@ -2,7 +2,6 @@ package k4unl.minecraft.colorchat.commands;
 
 import k4unl.minecraft.colorchat.lib.*;
 import k4unl.minecraft.colorchat.lib.config.Config;
-import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommand;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -89,6 +88,7 @@ public class CommandNick implements ICommand {
                 }
                 target.setNick(nickToSet);
                 sender.addChatMessage(new ChatComponentText("Nick is set to " + nickToSet));
+                ((EntityPlayerMP) sender).refreshDisplayName();
             }else{
                 sender.addChatMessage(new ChatComponentText("Your nick should be at least " + Config.getInt("minimumNickLength") + " characters long."));
             }
