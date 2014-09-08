@@ -27,7 +27,7 @@ repositories {
 apply plugin: 'forge'
 
 dependencies {
-    compile "k4unl:minecraft:k4lib:1.7.10-0.1.3:dev"
+    compile "k4unl.minecraft:k4lib:1.7.10-0.1.3:dev"
 }
 
 project.ext {
