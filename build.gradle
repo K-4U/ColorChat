@@ -15,30 +15,32 @@ buildscript {
     }
 }
 
-// define the properties file
-//ext.configFile = file "build.properties"
 
-//configFile.withReader {
-    // read config. it shall from now on be referenced as simply config or as project.config
-//    def prop = new Properties()
-//    prop.load(it)
-//    ext.config = new ConfigSlurper().parse prop
-//}
+repositories {
+    maven {
+        name "K4Repo"
+        url "http://maven.k-4u.nl"
+    }
+}
+
 
 apply plugin: 'forge'
+
+dependencies {
+    compile "k4unl:k4lib:1.7.10-0.1.3:dev"
+}
 
 project.ext {
     buildNum = System.getenv("BUILD_NUMBER")
     mcVersion="1.7.10"
 }
 
-version = "0.1.0"
+version = project.ext.mcVersion + "-0.1." + project.ext.buildNum
 group= "k4unl.minecraft.colorChat" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "colorchat"
 
 minecraft {
-    version = "${project.ext.mcVersion}-10.13.0.1150"
-    assetDir = "../minecraft/assets"
+    version = "${project.ext.mcVersion}-10.13.0.1208"
     replace "@VERSION@", project.version
 	replace "@BUILDNUM@", System.getenv().BUILD_NUMBER
 }
@@ -81,6 +83,5 @@ processResources
 }
 
 jar {
-    appendix = "${project.ext.mcVersion}"
-    classifier = "${project.ext.buildNum}"
+    classifier = "universal"
 }
