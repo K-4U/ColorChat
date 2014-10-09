@@ -81,7 +81,7 @@ public class Groups {
 					groupList = new ArrayList<Group>();
 				}
 				
-				Log.info("Read from file: " + json);
+				//Log.info("Read from file: " + json);
 			} catch (FileNotFoundException e) {
 				e.printStackTrace();
 			} catch (IOException e) {
@@ -96,7 +96,7 @@ public class Groups {
 		if(dir != null){
 			Gson gson = new Gson();
 			String json = gson.toJson(groupList);
-			Log.info("Saving: " + json);
+			//Log.info("Saving: " + json);
 			String p = dir.getAbsolutePath();
 			p += "/colors.groups.json";
 			File f = new File(p);
