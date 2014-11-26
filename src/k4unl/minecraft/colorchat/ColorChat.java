@@ -16,7 +16,8 @@ import net.minecraftforge.fml.common.event.*;
 	modid = ModInfo.ID,
 	name = ModInfo.NAME,
 	version = ModInfo.VERSION,
-	acceptableRemoteVersions="*"
+	acceptableRemoteVersions="*",
+	dependencies="required-after:k4lib"
 )
 
 

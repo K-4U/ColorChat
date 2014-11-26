@@ -27,7 +27,7 @@ repositories {
 apply plugin: 'forge'
 
 dependencies {
-    compile "k4unl:k4lib:1.8-1.0.3:deobf"
+    compile "k4unl:k4lib:1.8-1.0.4:deobf"
 }
 
 project.ext {
