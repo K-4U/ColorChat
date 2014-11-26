@@ -2,6 +2,7 @@ package k4unl.minecraft.colorchat.lib;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import k4unl.minecraft.k4lib.lib.SpecialChars;
 
 import java.io.*;
 import java.lang.reflect.Type;
@@ -48,6 +49,13 @@ public class Groups {
 		}else{
 			g.setColor(newColor);
 			return true;
+		}
+	}
+
+	public static void updateAll() {
+
+		for(Group g : groupList){
+			g.updateUsers();
 		}
 	}
 	
@@ -126,5 +134,6 @@ public class Groups {
 		}
 		return all;
 	}
+
 
 }

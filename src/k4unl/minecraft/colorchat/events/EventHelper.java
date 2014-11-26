@@ -1,13 +1,13 @@
 package k4unl.minecraft.colorchat.events;
 
-import cpw.mods.fml.common.FMLCommonHandler;
-import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import k4unl.minecraft.colorchat.lib.User;
 import k4unl.minecraft.colorchat.lib.Users;
-import k4unl.minecraft.colorchat.lib.config.Config;
+import k4unl.minecraft.colorchat.lib.config.CCConfig;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class EventHelper {
 	public static void init(){
@@ -51,7 +51,7 @@ public class EventHelper {
 
     @SubscribeEvent
     public void getDisplayNameEvent(PlayerEvent.NameFormat event){
-        User usr = Users.getUserByName(event.username);
+        User usr = Users.getUserByName(event.entityPlayer.getName());
         String displayName = "";
         if(usr.getGroup() != null){
             displayName+= usr.getGroup().getColor() + "[" + usr.getGroup().getName() + "]";
@@ -59,7 +59,7 @@ public class EventHelper {
         if(usr.hasNick()){
             displayName+= usr.getColor().toString();
 
-            displayName+= Config.getChar("leadingSymbolOnNick");
+            displayName+= CCConfig.INSTANCE.getChar("leadingSymbolOnNick");
 
             displayName+= usr.getNick() + "";
         }else{

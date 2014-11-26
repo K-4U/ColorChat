@@ -1,22 +1,40 @@
 package k4unl.minecraft.colorchat.commands;
 
-import k4unl.minecraft.colorchat.lib.*;
-import k4unl.minecraft.colorchat.lib.config.Config;
-import net.minecraft.command.ICommand;
+import k4unl.minecraft.colorchat.lib.Log;
+import k4unl.minecraft.k4lib.lib.SpecialChars;
+import k4unl.minecraft.colorchat.lib.User;
+import k4unl.minecraft.colorchat.lib.Users;
+import k4unl.minecraft.colorchat.lib.config.CCConfig;
+import k4unl.minecraft.k4lib.lib.Functions;
+import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
 
+import java.util.ArrayList;
 import java.util.List;
 
-public class CommandNick implements ICommand {
+public class CommandNick extends CommandBase {
+
+
+
+    private List<String> aliases;
+
+    public CommandNick(){
+        aliases = new ArrayList<String>();
+        aliases.add("nck");
+    }
+
+    public List getCommandAliases() {
+
+        return aliases;
+    }
 
 	@Override
 	public boolean canCommandSenderUseCommand(ICommandSender sender){
-        if(Config.getBool("nickChangeOPOnly")){
+        if(CCConfig.INSTANCE.getBool("nickChangeOPOnly")){
             if(sender instanceof EntityPlayerMP){
-                return MinecraftServer.getServer().getConfigurationManager().func_152596_g(((EntityPlayerMP) sender).getGameProfile());
+                return Functions.isPlayerOpped(((EntityPlayerMP) sender).getGameProfile());
             } else {
                 return true;
             }
@@ -32,7 +50,7 @@ public class CommandNick implements ICommand {
 
 	@Override
 	public String getCommandUsage(ICommandSender sender) {
-        if(Config.getBool("nickChangeOPOnly")){
+        if(CCConfig.INSTANCE.getBool("nickChangeOPOnly")){
             return "/nick <target> <nick>. Leave nick empty to reset";
         }else{
 		    return "/nick <nick>. Leave nick empty to reset";
@@ -40,16 +58,10 @@ public class CommandNick implements ICommand {
 	}
 
     @Override
-    public List getCommandAliases() {
-
-        return null;
-    }
-
-    @Override
 	public void processCommand(ICommandSender sender, String[] var2) {
         User target;
         String nickToSet;
-        if(Config.getBool("nickChangeOPOnly")){
+        if(CCConfig.INSTANCE.getBool("nickChangeOPOnly")){
             if(var2.length == 0){
                 sender.addChatMessage(new ChatComponentText("Please specify a target"));
                 return;
@@ -61,7 +73,7 @@ public class CommandNick implements ICommand {
                 nickToSet = "";
             }
         }else{
-		    target = Users.getUserByName(sender.getCommandSenderName());
+		    target = Users.getUserByName(sender.getName());
             if(var2.length == 1){
                 nickToSet = var2[0];
             }else{
@@ -69,35 +81,32 @@ public class CommandNick implements ICommand {
             }
         }
 		if(nickToSet.equals("")){
-            if(Config.getBool("announceNickChanges")){
+            if(CCConfig.INSTANCE.getBool("announceNickChanges")){
                 Functions.sendChatMessageServerWide(sender.getEntityWorld(), new ChatComponentText(SpecialChars.GOLD + target.getNick() + "(" + target.getUserName() + ") is now called " + target.getUserName()));
             }
             target.resetNick();
+            target.updateDisplayName();
 			sender.addChatMessage(new ChatComponentText("Nick is reset!"));
 		}else{
             nickToSet = nickToSet.replace("[", "").replace("]", "");
-            if(Config.isNickBlackListed(nickToSet)){
+            if(CCConfig.INSTANCE.isNickBlackListed(nickToSet)){
                 Log.error(target.getUserName() + " tried to set a banned nick (" + nickToSet + ")");
                 sender.addChatMessage(new ChatComponentText(SpecialChars.RED + "This nick is banned! You have been reported!"));
                 return;
             }
-            if(nickToSet.length() >= Config.getInt("minimumNickLength")){
-                if(Config.getBool("announceNickChanges")){
+            if(nickToSet.length() >= CCConfig.INSTANCE.getInt("minimumNickLength")){
+                if(CCConfig.INSTANCE.getBool("announceNickChanges")){
                     Functions.sendChatMessageServerWide(sender.getEntityWorld(), new ChatComponentText(SpecialChars.GOLD + "~" + target.getNick() +
                       "(" + target.getUserName() + ") is now called " + nickToSet));
                 }
                 target.setNick(nickToSet);
+                target.updateDisplayName();
                 sender.addChatMessage(new ChatComponentText("Nick is set to " + nickToSet));
                 ((EntityPlayerMP) sender).refreshDisplayName();
             }else{
-                sender.addChatMessage(new ChatComponentText("Your nick should be at least " + Config.getInt("minimumNickLength") + " characters long."));
+                sender.addChatMessage(new ChatComponentText("Your nick should be at least " + CCConfig.INSTANCE.getInt("minimumNickLength") + " characters long."));
             }
 		}
-	}
-
-	@Override
-	public List addTabCompletionOptions(ICommandSender cmd, String[] args) {
-		return null;
 	}
 
     @Override

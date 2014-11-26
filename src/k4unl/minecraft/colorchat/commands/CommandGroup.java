@@ -1,11 +1,14 @@
 package k4unl.minecraft.colorchat.commands;
 
-import k4unl.minecraft.colorchat.lib.*;
-import k4unl.minecraft.colorchat.lib.config.Config;
-import net.minecraft.command.ICommand;
+import k4unl.minecraft.colorchat.lib.Group;
+import k4unl.minecraft.colorchat.lib.Groups;
+import k4unl.minecraft.colorchat.lib.User;
+import k4unl.minecraft.colorchat.lib.Users;
+import k4unl.minecraft.colorchat.lib.config.CCConfig;
+import k4unl.minecraft.k4lib.lib.SpecialChars;
+import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
 import net.minecraftforge.common.DimensionManager;
 
@@ -13,12 +16,25 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-public class CommandGroup implements ICommand {
+public class CommandGroup extends CommandBase {
+
+
+	private List<String> aliases;
+
+	public CommandGroup(){
+		aliases = new ArrayList<String>();
+		aliases.add("gr");
+	}
+
+	public List getCommandAliases() {
+
+		return aliases;
+	}
 
 	@Override
 	public boolean canCommandSenderUseCommand(ICommandSender sender){
         if(sender instanceof EntityPlayerMP){
-            return MinecraftServer.getServer().getConfigurationManager().func_152596_g(((EntityPlayerMP) sender).getGameProfile());
+			return true;//Functions.isPlayerOpped(((EntityPlayerMP) sender).getGameProfile());
         } else {
             return true;
         }
@@ -34,12 +50,6 @@ public class CommandGroup implements ICommand {
 	public String getCommandUsage(ICommandSender sender) {
 		return "/group [list]/[create <name>]/[remove <name>]/[addUser <group> <name>]/[delUser <group> <name>]/[color <group> <color>]/[save]/[load]";
 	}
-
-    @Override
-    public List getCommandAliases() {
-
-        return null;
-    }
 
     @Override
 	public void processCommand(ICommandSender sender, String[] var2) {
@@ -62,6 +72,7 @@ public class CommandGroup implements ICommand {
                     if(Groups.getGroupByName(var2[1]) != null){
                         Group g = Groups.getGroupByName(var2[1]);
                         sender.addChatMessage(new ChatComponentText("Group " + g.getColor() + var2[1] + "" + SpecialChars.RESET + " has been removed"));
+						g.updateUsers();
                         Groups.removeGroupByName(var2[1]);
                     }else{
                         sender.addChatMessage(new ChatComponentText("This group doesn't exists"));
@@ -75,6 +86,7 @@ public class CommandGroup implements ICommand {
             }else if(var2[0].equals("load")){
                 Groups.readFromFile(DimensionManager.getCurrentSaveRootDirectory());
                 sender.addChatMessage(new ChatComponentText("Groups loaded from file!"));
+				Groups.updateAll();
 			}else if(var2[0].equals("addUser")){
 				if(var2.length == 3){
 					if(Groups.getGroupByName(var2[1]) == null){
@@ -86,6 +98,7 @@ public class CommandGroup implements ICommand {
 							sender.addChatMessage(new ChatComponentText(sndr.getColor() + sndr.getUserName() + SpecialChars.RESET + " is already in this group."));
 						}else{
 							sndr.setGroup(g);
+							sndr.updateDisplayName();
 							sender.addChatMessage(new ChatComponentText("Added " + sndr.getColor() + sndr.getUserName() + SpecialChars.RESET +  " to " + g.getColor() + g.getName()));
 						}
 					}
@@ -102,6 +115,7 @@ public class CommandGroup implements ICommand {
                         if(sndr.getGroup() != null && sndr.getGroup().equals(g)){
                             sndr.setGroup(null);
                             sender.addChatMessage(new ChatComponentText(sndr.getColor() + sndr.getUserName() + SpecialChars.RESET + " is removed from " + g.getColor() + g.getName()));
+							sndr.updateDisplayName();
                         }else{
                             sender.addChatMessage(new ChatComponentText(sndr.getColor() + sndr.getUserName() + SpecialChars.RESET + " is not in this group"));
                         }
@@ -121,18 +135,21 @@ public class CommandGroup implements ICommand {
 						}else if(clr.equals("random")){
                             List<String> keysAsArray = new ArrayList<String>(CommandColor.colors.keySet());
                             String newClr = keysAsArray.get(new Random().nextInt(keysAsArray.size()));
-                            while(Config.isColorBlackListed(newClr)){
+                            while(CCConfig.INSTANCE.isColorBlackListed(newClr)){
                                 newClr = keysAsArray.get(new Random().nextInt(keysAsArray.size()));
                             }
 
 							g.setColor(CommandColor.colors.get(newClr));
+							g.updateUsers();
 							sender.addChatMessage(new ChatComponentText("The group color has now been set to " + CommandColor.colors.get(newClr) + newClr));
+
 						}else if(CommandColor.colors.containsKey(clr)){
-                            if(Config.isColorBlackListed(clr)){
+                            if(CCConfig.INSTANCE.isColorBlackListed(clr)){
                                 sender.addChatMessage(new ChatComponentText(CommandColor.colors.get("red") + "This color has been blacklisted. Try " +
                                   "another color!"));
                             }else{
                                 g.setColor(CommandColor.colors.get(clr));
+								g.updateUsers();
                                 sender.addChatMessage(new ChatComponentText("The group color has now been set to " + CommandColor.colors.get(clr) + clr));
                             }
 						}else{
@@ -144,11 +161,6 @@ public class CommandGroup implements ICommand {
 				sender.addChatMessage(new ChatComponentText(Groups.getGroupNames()));
 			}
 		}
-	}
-
-	@Override
-	public List addTabCompletionOptions(ICommandSender sender, String[] var2) {
-		return null;
 	}
 
     @Override

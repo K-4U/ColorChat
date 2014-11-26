@@ -1,21 +1,29 @@
 package k4unl.minecraft.colorchat.commands;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-import java.util.Random;
-
-import k4unl.minecraft.colorchat.lib.SpecialChars;
 import k4unl.minecraft.colorchat.lib.User;
 import k4unl.minecraft.colorchat.lib.Users;
-import k4unl.minecraft.colorchat.lib.config.Config;
-import k4unl.minecraft.colorchat.lib.config.ConfigHandler;
+import k4unl.minecraft.colorchat.lib.config.CCConfig;
+import k4unl.minecraft.k4lib.lib.SpecialChars;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
 
+import java.util.*;
+
 public class CommandColor extends CommandBase{
+
+	private List<String> aliases;
+
+	public CommandColor(){
+		aliases = new ArrayList<String>();
+		aliases.add("clr");
+	}
+
+	public List getCommandAliases() {
+
+		return aliases;
+	}
 
 	@Override
 	public boolean canCommandSenderUseCommand(ICommandSender par1iCommandSender){
@@ -48,6 +56,8 @@ public class CommandColor extends CommandBase{
 		return "color";
 	}
 
+
+
 	@Override
 	public String getCommandUsage(ICommandSender sender) {
 		return "/color " + getColors();
@@ -56,7 +66,7 @@ public class CommandColor extends CommandBase{
 	public static String getColors(){
 		String colorString = "";
 		for(String c: colors.keySet()){
-            if(!Config.isColorBlackListed(c)){
+            if(!CCConfig.INSTANCE.isColorBlackListed(c)){
 			    colorString += ", " + c;
             }
 		}
@@ -69,7 +79,7 @@ public class CommandColor extends CommandBase{
 	
 	@Override
 	public void processCommand(ICommandSender sender, String[] var2) {
-		User sndr = Users.getUserByName(sender.getCommandSenderName());
+		User sndr = Users.getUserByName(sender.getName());
 		if(var2.length == 0){
 			printColors(sender);
 		}else{
@@ -79,27 +89,28 @@ public class CommandColor extends CommandBase{
 			}else if(clr.equals("random")){
                 List<String> keysAsArray = new ArrayList<String>(colors.keySet());
                 String newClr = keysAsArray.get(new Random().nextInt(keysAsArray.size()));
-                while(Config.isColorBlackListed(newClr)){
+                while(CCConfig.INSTANCE.isColorBlackListed(newClr)){
 				    newClr = keysAsArray.get(new Random().nextInt(keysAsArray.size()));
                 }
 				
 				sndr.setUserColor(colors.get(newClr));
 				sender.addChatMessage(new ChatComponentText("Your color has now been set to " + colors.get(newClr) + newClr));
+				if(sender.getCommandSenderEntity() instanceof EntityPlayer){
+					((EntityPlayer)sender.getCommandSenderEntity()).refreshDisplayName();
+				}
 			}else if(colors.containsKey(clr)){
-                if(Config.isColorBlackListed(clr)){
+                if(CCConfig.INSTANCE.isColorBlackListed(clr)){
                     sender.addChatMessage(new ChatComponentText(colors.get("red") + "This color has been blacklisted. Try another color!"));
                 }else{
 				    sndr.setUserColor(colors.get(clr));
 				    sender.addChatMessage(new ChatComponentText("Your color has now been set to " + colors.get(clr) + clr));
+					if(sender.getCommandSenderEntity() instanceof EntityPlayer){
+						((EntityPlayer)sender.getCommandSenderEntity()).refreshDisplayName();
+					}
                 }
 			}else{
 				printColors(sender);
 			}
 		}
-	}
-
-	@Override
-	public List addTabCompletionOptions(ICommandSender cmd, String[] args) {
-		return null;
 	}
 }

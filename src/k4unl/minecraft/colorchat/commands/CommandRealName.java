@@ -1,22 +1,38 @@
 package k4unl.minecraft.colorchat.commands;
 
-import java.util.List;
-
 import k4unl.minecraft.colorchat.lib.User;
 import k4unl.minecraft.colorchat.lib.Users;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.ChatComponentText;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class CommandRealName extends CommandBase{
 
+	private List<String> aliases;
+
+	public CommandRealName() {
+
+		aliases = new ArrayList<String>();
+		aliases.add("rn");
+	}
+
+	public List getCommandAliases() {
+
+		return aliases;
+	}
+
 	@Override
-	public boolean canCommandSenderUseCommand(ICommandSender par1iCommandSender){
+	public boolean canCommandSenderUseCommand(ICommandSender par1iCommandSender) {
+
 		return true;
 	}
-	
+
 	@Override
 	public String getCommandName() {
+
 		return "realname";
 	}
 
@@ -38,10 +54,5 @@ public class CommandRealName extends CommandBase{
 				sender.addChatMessage(new ChatComponentText(var2[0] + " is not a registered nickname"));
 			}
 		}
-	}
-
-	@Override
-	public List addTabCompletionOptions(ICommandSender cmd, String[] args) {
-		return null;
 	}
 }

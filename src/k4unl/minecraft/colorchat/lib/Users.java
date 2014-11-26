@@ -36,6 +36,15 @@ public class Users {
 		return null;
 	}
 
+	public static List<User> getUsersByGroup(Group g) {
+		List<User> userList = new ArrayList<User>();
+		for(User u : userList) {
+			if (u.getGroup().equals(g)) {
+				userList.add(u);
+			}
+		}
+		return userList;
+	}
 
     public static void removeGroupFromUsers(Group g) {
         for(User u : userList){
@@ -112,5 +121,6 @@ public class Users {
 			
 		}
 	}
+
 
 }

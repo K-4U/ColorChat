@@ -1,21 +1,16 @@
 package k4unl.minecraft.colorchat;
 
-import k4unl.minecraft.colorchat.lib.config.ConfigHandler;
-import net.minecraftforge.common.DimensionManager;
 import k4unl.minecraft.colorchat.commands.Commands;
 import k4unl.minecraft.colorchat.events.EventHelper;
 import k4unl.minecraft.colorchat.lib.Groups;
 import k4unl.minecraft.colorchat.lib.Log;
 import k4unl.minecraft.colorchat.lib.Users;
+import k4unl.minecraft.colorchat.lib.config.CCConfig;
 import k4unl.minecraft.colorchat.lib.config.ModInfo;
-import cpw.mods.fml.common.Mod;
-import cpw.mods.fml.common.Mod.EventHandler;
-import cpw.mods.fml.common.Mod.Instance;
-import cpw.mods.fml.common.event.FMLInitializationEvent;
-import cpw.mods.fml.common.event.FMLPostInitializationEvent;
-import cpw.mods.fml.common.event.FMLPreInitializationEvent;
-import cpw.mods.fml.common.event.FMLServerStartingEvent;
-import cpw.mods.fml.common.event.FMLServerStoppingEvent;
+import k4unl.minecraft.k4lib.lib.config.ConfigHandler;
+import net.minecraftforge.common.DimensionManager;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.event.*;
 
 @Mod(
 	modid = ModInfo.ID,
@@ -26,41 +21,49 @@ import cpw.mods.fml.common.event.FMLServerStoppingEvent;
 
 
 public class ColorChat {
-	@Instance(value=ModInfo.ID)
+
+	private ConfigHandler CCConfigHandler = new ConfigHandler();
+
+	@Mod.Instance(value = ModInfo.ID)
 	public static ColorChat instance;
 
-	@EventHandler
-	public void preInit(FMLPreInitializationEvent event){
+	@Mod.EventHandler
+	public void preInit(FMLPreInitializationEvent event) {
+
 		Log.init();
-        ConfigHandler.init(event.getSuggestedConfigurationFile());
+		CCConfig.INSTANCE.init();
+		CCConfigHandler.init(CCConfig.INSTANCE, event.getSuggestedConfigurationFile());
 		Users.init();
 		Groups.init();
 	}
-	
-	@EventHandler
-	public void load(FMLInitializationEvent event){		
+
+	@Mod.EventHandler
+	public void load(FMLInitializationEvent event) {
+
 		EventHelper.init();
 	}
-	
-	
-	@EventHandler
-	public void postInit(FMLPostInitializationEvent event){
-		
+
+	@Mod.EventHandler
+	public void postInit(FMLPostInitializationEvent event) {
+
 	}
-	
-	@EventHandler
+
+	@Mod.EventHandler
 	public void onServerStart(FMLServerStartingEvent event) {
+
 		Commands.init(event);
 	}
-	
-	@EventHandler
-	public void serverStart(FMLServerStartingEvent event){
+
+	@Mod.EventHandler
+	public void serverStart(FMLServerStartingEvent event) {
+
 		Users.readFromFile(DimensionManager.getCurrentSaveRootDirectory());
 		Groups.readFromFile(DimensionManager.getCurrentSaveRootDirectory());
 	}
-	
-	@EventHandler
-	public void serverStop(FMLServerStoppingEvent event){
+
+	@Mod.EventHandler
+	public void serverStop(FMLServerStoppingEvent event) {
+
 		Users.saveToFile(DimensionManager.getCurrentSaveRootDirectory());
 		Groups.saveToFile(DimensionManager.getCurrentSaveRootDirectory());		
 	}

@@ -1,27 +1,30 @@
 package k4unl.minecraft.colorchat.lib;
 
-
 import k4unl.minecraft.colorchat.commands.CommandColor;
-import k4unl.minecraft.colorchat.lib.config.Config;
+import k4unl.minecraft.colorchat.lib.config.CCConfig;
+import k4unl.minecraft.k4lib.lib.SpecialChars;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 public class Group {
-	private String groupName;
+
+	private String       groupName;
 	private SpecialChars groupColor;
-	
-	public Group(String _groupName, SpecialChars _groupColor){
+
+	public Group(String _groupName, SpecialChars _groupColor) {
+
 		groupName = _groupName;
 		groupColor = _groupColor;
 	}
-	
-	public Group(String _groupName){
+
+	public Group(String _groupName) {
+
 		groupName = _groupName;
-        List<String> keysAsArray = new ArrayList<String>(CommandColor.colors.keySet());
-        String newClr = keysAsArray.get(new Random().nextInt(keysAsArray.size()));
-        while(Config.isColorBlackListed(newClr)){
+		List<String> keysAsArray = new ArrayList<String>(CommandColor.colors.keySet());
+		String newClr = keysAsArray.get(new Random().nextInt(keysAsArray.size()));
+        while(CCConfig.INSTANCE.isColorBlackListed(newClr)){
             newClr = keysAsArray.get(new Random().nextInt(keysAsArray.size()));
         }
 
@@ -38,5 +41,13 @@ public class Group {
 
 	public void setColor(SpecialChars newColor) {
 		groupColor = newColor;
+	}
+
+	public void updateUsers(){
+		for(User u: Users.getUsersByGroup(this)){
+			if(u.getPlayerEntity() != null){
+				u.getPlayerEntity().refreshDisplayName();
+			}
+		}
 	}
 }
