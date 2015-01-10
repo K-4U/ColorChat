@@ -81,7 +81,7 @@ public class User {
 	public EntityPlayer getPlayerEntity() {
 		if(playerEntity == null) {
 			for (EntityPlayer player : (List<EntityPlayer>) MinecraftServer.getServer().getEntityWorld().playerEntities) {
-				if (player.getName().equals(this.getUserName())) {
+				if (player.getGameProfile().getName().equals(this.getUserName())) {
 					playerEntity = player;
 					return player;
 				}

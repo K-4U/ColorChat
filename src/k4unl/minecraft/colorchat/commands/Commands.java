@@ -1,6 +1,7 @@
 package k4unl.minecraft.colorchat.commands;
 
-import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
+
+import cpw.mods.fml.common.event.FMLServerStartingEvent;
 
 public class Commands {
 

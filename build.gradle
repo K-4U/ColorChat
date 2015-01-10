@@ -27,22 +27,22 @@ repositories {
 apply plugin: 'forge'
 
 dependencies {
-    compile "k4unl:k4lib:1.8-1.0.4:deobf"
+    compile "k4unl:k4lib:1.7.10-0.1.20:deobf"
 }
 
 project.ext {
     buildNum = System.getenv("BUILD_NUMBER")
-    mcVersion="1.8"
+    mcVersion="1.7.10"
 }
 
-version = project.ext.mcVersion + "-1.0." + project.ext.buildNum
+version = project.ext.mcVersion + "-0.1." + project.ext.buildNum
 group= "k4unl.minecraft.colorChat" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "colorchat"
 
 minecraft {
-    version = "${project.ext.mcVersion}-11.14.0.1239-1.8"
+    version = "${project.ext.mcVersion}-10.13.0.1208"
     replace "@VERSION@", project.version
-	replace "@BUILDNUM@", System.getenv().BUILD_NUMBER
+    replace "@BUILDNUM@", System.getenv().BUILD_NUMBER
 }
 
 // configure the source folders
@@ -50,37 +50,37 @@ sourceSets {
     main {
         java {
             srcDir 'src'
-                // exclude 'some exclusion'
-                // include 'some inclusion'
+            // exclude 'some exclusion'
+            // include 'some inclusion'
         }
         resources {
             srcDir 'resources'
-                exclude '**/.md' // exclude readme from localization repo
-                // exclude 'some exclusion'
-                // include 'some inclusion'
+            exclude '**/.md' // exclude readme from localization repo
+            // exclude 'some exclusion'
+            // include 'some inclusion'
         }
     }
 }
 
 processResources
-{
-    // this will ensure that this task is redone when the versions change.
-    inputs.property "version", project.version
-    inputs.property "mcversion", project.minecraft.version
+        {
+            // this will ensure that this task is redone when the versions change.
+            inputs.property "version", project.version
+            inputs.property "mcversion", project.minecraft.version
 
-    // replace stuff in mcmod.info, nothing else
-    from(sourceSets.main.resources.srcDirs) {
-        //include 'mcmod.info'
-                
-        // replace version and mcversion
-        expand 'version':project.version, 'mcversion':project.minecraft.version
-    }
-        
-    // copy everything else, thats not the mcmod.info
-    from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'
-    }
-}
+            // replace stuff in mcmod.info, nothing else
+            from(sourceSets.main.resources.srcDirs) {
+                //include 'mcmod.info'
+
+                // replace version and mcversion
+                expand 'version':project.version, 'mcversion':project.minecraft.version
+            }
+
+            // copy everything else, thats not the mcmod.info
+            from(sourceSets.main.resources.srcDirs) {
+                exclude 'mcmod.info'
+            }
+        }
 
 jar {
     classifier = "universal"

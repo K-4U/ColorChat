@@ -11,7 +11,6 @@ public class CCConfig extends Config {
 
     public static final CCConfig INSTANCE = new CCConfig();
 
-    private final List<ConfigOption> configOptions = new ArrayList<ConfigOption>();
     private String[] blacklistedColors;
     private String[] blacklistedNicks;
     private String[] blacklistedSymbols;
@@ -23,6 +22,8 @@ public class CCConfig extends Config {
         configOptions.add(new ConfigOption("announceNickChanges", true));
         configOptions.add(new ConfigOption("nickChangeOPOnly", false));
         configOptions.add(new ConfigOption("leadingSymbolOnNick", '~'));
+        configOptions.add(new ConfigOption("changeDisplayName", true).setComment("Disable this if you want to use a mod that has bad coding and "
+          + "depends on displayName"));
 	}
 
     @Override

@@ -1,5 +1,7 @@
 package k4unl.minecraft.colorchat;
 
+import cpw.mods.fml.common.Mod;
+import cpw.mods.fml.common.event.*;
 import k4unl.minecraft.colorchat.commands.Commands;
 import k4unl.minecraft.colorchat.events.EventHelper;
 import k4unl.minecraft.colorchat.lib.Groups;
@@ -9,8 +11,6 @@ import k4unl.minecraft.colorchat.lib.config.CCConfig;
 import k4unl.minecraft.colorchat.lib.config.ModInfo;
 import k4unl.minecraft.k4lib.lib.config.ConfigHandler;
 import net.minecraftforge.common.DimensionManager;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.event.*;
 
 @Mod(
 	modid = ModInfo.ID,

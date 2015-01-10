@@ -73,7 +73,7 @@ public class CommandNick extends CommandBase {
                 nickToSet = "";
             }
         }else{
-		    target = Users.getUserByName(sender.getName());
+		    target = Users.getUserByName(sender.getCommandSenderName());
             if(var2.length == 1){
                 nickToSet = var2[0];
             }else{
@@ -102,7 +102,9 @@ public class CommandNick extends CommandBase {
                 target.setNick(nickToSet);
                 target.updateDisplayName();
                 sender.addChatMessage(new ChatComponentText("Nick is set to " + nickToSet));
-                ((EntityPlayerMP) sender).refreshDisplayName();
+                if(CCConfig.INSTANCE.getBool("changeDisplayName")) {
+                    ((EntityPlayerMP) sender).refreshDisplayName();
+                }
             }else{
                 sender.addChatMessage(new ChatComponentText("Your nick should be at least " + CCConfig.INSTANCE.getInt("minimumNickLength") + " characters long."));
             }

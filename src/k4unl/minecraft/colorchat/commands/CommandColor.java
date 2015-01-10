@@ -29,9 +29,9 @@ public class CommandColor extends CommandBase{
 	public boolean canCommandSenderUseCommand(ICommandSender par1iCommandSender){
 		return true;
 	}
-	
-	public static Map<String, SpecialChars> colors = new HashMap<String, SpecialChars>(); 
-	
+
+	public static Map<String, SpecialChars> colors = new HashMap<String, SpecialChars>();
+
 	static {
 		colors.put("black", SpecialChars.BLACK);
 		colors.put("darkblue", SpecialChars.DBLUE);
@@ -50,7 +50,7 @@ public class CommandColor extends CommandBase{
 		colors.put("yellow", SpecialChars.YELLOW);
 		colors.put("white", SpecialChars.WHITE);
 	}
-	
+
 	@Override
 	public String getCommandName() {
 		return "color";
@@ -66,20 +66,20 @@ public class CommandColor extends CommandBase{
 	public static String getColors(){
 		String colorString = "";
 		for(String c: colors.keySet()){
-            if(!CCConfig.INSTANCE.isColorBlackListed(c)){
-			    colorString += ", " + c;
-            }
+			if(!CCConfig.INSTANCE.isColorBlackListed(c)){
+				colorString += ", " + c;
+			}
 		}
 		return colorString;
 	}
-	
+
 	public static void printColors(ICommandSender sender){
 		sender.addChatMessage(new ChatComponentText("Available colors are " + getColors()));
 	}
-	
+
 	@Override
 	public void processCommand(ICommandSender sender, String[] var2) {
-		User sndr = Users.getUserByName(sender.getName());
+		User sndr = Users.getUserByName(sender.getCommandSenderName());
 		if(var2.length == 0){
 			printColors(sender);
 		}else{
@@ -87,27 +87,31 @@ public class CommandColor extends CommandBase{
 			if(clr.equals("help")){
 				printColors(sender);
 			}else if(clr.equals("random")){
-                List<String> keysAsArray = new ArrayList<String>(colors.keySet());
-                String newClr = keysAsArray.get(new Random().nextInt(keysAsArray.size()));
-                while(CCConfig.INSTANCE.isColorBlackListed(newClr)){
-				    newClr = keysAsArray.get(new Random().nextInt(keysAsArray.size()));
-                }
-				
+				List<String> keysAsArray = new ArrayList<String>(colors.keySet());
+				String newClr = keysAsArray.get(new Random().nextInt(keysAsArray.size()));
+				while(CCConfig.INSTANCE.isColorBlackListed(newClr)){
+					newClr = keysAsArray.get(new Random().nextInt(keysAsArray.size()));
+				}
+
 				sndr.setUserColor(colors.get(newClr));
 				sender.addChatMessage(new ChatComponentText("Your color has now been set to " + colors.get(newClr) + newClr));
-				if(sender.getCommandSenderEntity() instanceof EntityPlayer){
-					((EntityPlayer)sender.getCommandSenderEntity()).refreshDisplayName();
+				if(CCConfig.INSTANCE.getBool("changeDisplayName")) {
+					if (sender instanceof EntityPlayer) {
+						((EntityPlayer) sender).refreshDisplayName();
+					}
 				}
 			}else if(colors.containsKey(clr)){
-                if(CCConfig.INSTANCE.isColorBlackListed(clr)){
-                    sender.addChatMessage(new ChatComponentText(colors.get("red") + "This color has been blacklisted. Try another color!"));
-                }else{
-				    sndr.setUserColor(colors.get(clr));
-				    sender.addChatMessage(new ChatComponentText("Your color has now been set to " + colors.get(clr) + clr));
-					if(sender.getCommandSenderEntity() instanceof EntityPlayer){
-						((EntityPlayer)sender.getCommandSenderEntity()).refreshDisplayName();
+				if(CCConfig.INSTANCE.isColorBlackListed(clr)){
+					sender.addChatMessage(new ChatComponentText(colors.get("red") + "This color has been blacklisted. Try another color!"));
+				}else{
+					sndr.setUserColor(colors.get(clr));
+					sender.addChatMessage(new ChatComponentText("Your color has now been set to " + colors.get(clr) + clr));
+					if(CCConfig.INSTANCE.getBool("changeDisplayName")) {
+						if (sender instanceof EntityPlayer) {
+							((EntityPlayer) sender).refreshDisplayName();
+						}
 					}
-                }
+				}
 			}else{
 				printColors(sender);
 			}
