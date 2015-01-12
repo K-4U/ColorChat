@@ -93,6 +93,8 @@ public class User {
 	}
 
 	public void updateDisplayName() {
-		getPlayerEntity().refreshDisplayName();
+		if(CCConfig.INSTANCE.getBool("changeDisplayName")) {
+			getPlayerEntity().refreshDisplayName();
+		}
 	}
 }

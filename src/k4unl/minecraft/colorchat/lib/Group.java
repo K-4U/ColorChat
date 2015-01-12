@@ -44,9 +44,11 @@ public class Group {
 	}
 
 	public void updateUsers(){
-		for(User u: Users.getUsersByGroup(this)){
-			if(u.getPlayerEntity() != null){
-				u.getPlayerEntity().refreshDisplayName();
+		if(CCConfig.INSTANCE.getBool("changeDisplayName")) {
+			for (User u : Users.getUsersByGroup(this)) {
+				if (u.getPlayerEntity() != null) {
+					u.getPlayerEntity().refreshDisplayName();
+				}
 			}
 		}
 	}
