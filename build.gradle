@@ -27,7 +27,7 @@ repositories {
 apply plugin: 'forge'
 
 dependencies {
-    compile "k4unl:k4lib:1.8-1.0.4:deobf"
+    compile "k4unl:k4lib:1.8-1.0.5:deobf"
 }
 
 project.ext {
@@ -40,7 +40,7 @@ group= "k4unl.minecraft.colorChat" // http://maven.apache.org/guides/mini/guide-
 archivesBaseName = "colorchat"
 
 minecraft {
-    version = "${project.ext.mcVersion}-11.14.0.1239-1.8"
+    version = "${project.ext.mcVersion}-11.14.1.1332"
     replace "@VERSION@", project.version
 	replace "@BUILDNUM@", System.getenv().BUILD_NUMBER
 }
