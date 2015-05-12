@@ -11,5 +11,6 @@ public class Commands {
 		event.registerServerCommand(new CommandRealName());
 		event.registerServerCommand(new CommandGroup());
 		event.registerServerCommand(new CommandCoords());
+        event.registerServerCommand(new CommandColorChat());
 	}
 }
