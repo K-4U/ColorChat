@@ -5,8 +5,8 @@ import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 import k4unl.minecraft.colorchat.lib.User;
 import k4unl.minecraft.colorchat.lib.Users;
 import k4unl.minecraft.colorchat.lib.config.CCConfig;
-import k4unl.minecraft.k4lib.lib.SpecialChars;
 import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ServerChatEvent;
@@ -43,7 +43,7 @@ public class EventHelper {
 			} else {
 				userName += usr.getColor().toString() + "" + usr.getUserName() + "";
 			}
-			String chatMessage = SpecialChars.RESET + "> " + event.message.replaceAll("%", "%%");
+			String chatMessage = EnumChatFormatting.RESET + "> " + event.message.replaceAll("%", "%%");
 			String textMessage = userName + chatMessage;
 
 			event.component = new ChatComponentTranslation(textMessage);

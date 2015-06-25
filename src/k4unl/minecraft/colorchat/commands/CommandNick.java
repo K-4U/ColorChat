@@ -1,7 +1,6 @@
 package k4unl.minecraft.colorchat.commands;
 
 import k4unl.minecraft.colorchat.lib.Log;
-import k4unl.minecraft.k4lib.lib.SpecialChars;
 import k4unl.minecraft.colorchat.lib.User;
 import k4unl.minecraft.colorchat.lib.Users;
 import k4unl.minecraft.colorchat.lib.config.CCConfig;
@@ -10,6 +9,7 @@ import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -82,7 +82,7 @@ public class CommandNick extends CommandBase {
         }
 		if(nickToSet.equals("")){
             if(CCConfig.INSTANCE.getBool("announceNickChanges")){
-                Functions.sendChatMessageServerWide(sender.getEntityWorld(), new ChatComponentText(SpecialChars.GOLD + target.getNick() + "(" + target.getUserName() + ") is now called " + target.getUserName()));
+                Functions.sendChatMessageServerWide(sender.getEntityWorld(), new ChatComponentText(EnumChatFormatting.GOLD + target.getNick() + "(" + target.getUserName() + ") is now called " + target.getUserName()));
             }
             target.resetNick();
             target.updateDisplayName();
@@ -91,12 +91,12 @@ public class CommandNick extends CommandBase {
             nickToSet = nickToSet.replace("[", "").replace("]", "");
             if(CCConfig.INSTANCE.isNickBlackListed(nickToSet)){
                 Log.error(target.getUserName() + " tried to set a banned nick (" + nickToSet + ")");
-                sender.addChatMessage(new ChatComponentText(SpecialChars.RED + "This nick is banned! You have been reported!"));
+                sender.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "This nick is banned! You have been reported!"));
                 return;
             }
             if(nickToSet.length() >= CCConfig.INSTANCE.getInt("minimumNickLength")){
                 if(CCConfig.INSTANCE.getBool("announceNickChanges")){
-                    Functions.sendChatMessageServerWide(sender.getEntityWorld(), new ChatComponentText(SpecialChars.GOLD + "~" + target.getNick() +
+                    Functions.sendChatMessageServerWide(sender.getEntityWorld(), new ChatComponentText(EnumChatFormatting.GOLD + "~" + target.getNick() +
                       "(" + target.getUserName() + ") is now called " + nickToSet));
                 }
                 target.setNick(nickToSet);

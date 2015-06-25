@@ -1,11 +1,9 @@
 package k4unl.minecraft.colorchat.lib;
 
 import com.google.gson.Gson;
-import com.google.gson.reflect.TypeToken;
-import k4unl.minecraft.k4lib.lib.SpecialChars;
+import net.minecraft.util.EnumChatFormatting;
 
 import java.io.*;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -42,7 +40,7 @@ public class Groups {
         }
     }
 	
-	public static boolean setGroupColor(String name, SpecialChars newColor){
+	public static boolean setGroupColor(String name, EnumChatFormatting newColor){
 		Group g = getGroupByName(name);
 		if(g == null){
 			return false;
@@ -83,8 +81,8 @@ public class Groups {
 				ipStream.close();
 				bReader.close();
 				
-				Type myTypeMap = new TypeToken<List<Group>>(){}.getType();
-				groupList = gson.fromJson(json, myTypeMap);
+				ArrayList myTypeMap = new ArrayList<List<Group>>();
+				groupList = gson.fromJson(json, myTypeMap.getClass());
 				if(groupList == null){
 					groupList = new ArrayList<Group>();
 				}

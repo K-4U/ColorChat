@@ -4,9 +4,6 @@ import k4unl.minecraft.k4lib.lib.config.Config;
 import k4unl.minecraft.k4lib.lib.config.ConfigOption;
 import net.minecraftforge.common.config.Configuration;
 
-import java.util.ArrayList;
-import java.util.List;
-
 public class CCConfig extends Config {
 
     public static final CCConfig INSTANCE = new CCConfig();

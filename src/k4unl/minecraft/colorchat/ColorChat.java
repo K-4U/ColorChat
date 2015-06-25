@@ -19,8 +19,6 @@ import net.minecraftforge.common.DimensionManager;
 	acceptableRemoteVersions="*",
 	dependencies="required-after:k4lib"
 )
-
-
 public class ColorChat {
 
 	private ConfigHandler CCConfigHandler = new ConfigHandler();

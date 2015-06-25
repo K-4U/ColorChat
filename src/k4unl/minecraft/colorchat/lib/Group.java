@@ -2,7 +2,7 @@ package k4unl.minecraft.colorchat.lib;
 
 import k4unl.minecraft.colorchat.commands.CommandColor;
 import k4unl.minecraft.colorchat.lib.config.CCConfig;
-import k4unl.minecraft.k4lib.lib.SpecialChars;
+import net.minecraft.util.EnumChatFormatting;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,9 +11,9 @@ import java.util.Random;
 public class Group {
 
 	private String       groupName;
-	private SpecialChars groupColor;
+	private EnumChatFormatting groupColor;
 
-	public Group(String _groupName, SpecialChars _groupColor) {
+	public Group(String _groupName, EnumChatFormatting _groupColor) {
 
 		groupName = _groupName;
 		groupColor = _groupColor;
@@ -35,11 +35,11 @@ public class Group {
 		return groupName;
 	}
 	
-	public SpecialChars getColor(){
+	public EnumChatFormatting getColor(){
 		return groupColor;
 	}
 
-	public void setColor(SpecialChars newColor) {
+	public void setColor(EnumChatFormatting newColor) {
 		groupColor = newColor;
 	}
 

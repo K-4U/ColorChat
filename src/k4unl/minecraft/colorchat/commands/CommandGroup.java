@@ -5,11 +5,11 @@ import k4unl.minecraft.colorchat.lib.Groups;
 import k4unl.minecraft.colorchat.lib.User;
 import k4unl.minecraft.colorchat.lib.Users;
 import k4unl.minecraft.colorchat.lib.config.CCConfig;
-import k4unl.minecraft.k4lib.lib.SpecialChars;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.DimensionManager;
 
 import java.util.ArrayList;
@@ -60,7 +60,7 @@ public class CommandGroup extends CommandBase {
 				if(var2.length == 2){
 					if(Groups.getGroupByName(var2[1]) == null){
 						Group g = Groups.createNewGroup(var2[1]);
-						sender.addChatMessage(new ChatComponentText("Group " + g.getColor() + var2[1] + "" + SpecialChars.RESET + " has been created"));
+						sender.addChatMessage(new ChatComponentText("Group " + g.getColor() + var2[1] + "" + EnumChatFormatting.RESET + " has been created"));
 					}else{
 						sender.addChatMessage(new ChatComponentText("This group already exists"));
 					}
@@ -71,7 +71,7 @@ public class CommandGroup extends CommandBase {
                 if(var2.length == 2){
                     if(Groups.getGroupByName(var2[1]) != null){
                         Group g = Groups.getGroupByName(var2[1]);
-                        sender.addChatMessage(new ChatComponentText("Group " + g.getColor() + var2[1] + "" + SpecialChars.RESET + " has been removed"));
+                        sender.addChatMessage(new ChatComponentText("Group " + g.getColor() + var2[1] + "" + EnumChatFormatting.RESET + " has been removed"));
 						g.updateUsers();
                         Groups.removeGroupByName(var2[1]);
                     }else{
@@ -95,11 +95,11 @@ public class CommandGroup extends CommandBase {
 						Group g = Groups.getGroupByName(var2[1]);
 						User sndr = Users.getUserByName(var2[2]);
 						if(sndr.getGroup() != null && sndr.getGroup().equals(g)){
-							sender.addChatMessage(new ChatComponentText(sndr.getColor() + sndr.getUserName() + SpecialChars.RESET + " is already in this group."));
+							sender.addChatMessage(new ChatComponentText(sndr.getColor() + sndr.getUserName() + EnumChatFormatting.RESET + " is already in this group."));
 						}else{
 							sndr.setGroup(g);
 							sndr.updateDisplayName();
-							sender.addChatMessage(new ChatComponentText("Added " + sndr.getColor() + sndr.getUserName() + SpecialChars.RESET +  " to " + g.getColor() + g.getName()));
+							sender.addChatMessage(new ChatComponentText("Added " + sndr.getColor() + sndr.getUserName() + EnumChatFormatting.RESET +  " to " + g.getColor() + g.getName()));
 						}
 					}
 				}else{
@@ -114,10 +114,10 @@ public class CommandGroup extends CommandBase {
                         User sndr = Users.getUserByName(var2[2]);
                         if(sndr.getGroup() != null && sndr.getGroup().equals(g)){
                             sndr.setGroup(null);
-                            sender.addChatMessage(new ChatComponentText(sndr.getColor() + sndr.getUserName() + SpecialChars.RESET + " is removed from " + g.getColor() + g.getName()));
+                            sender.addChatMessage(new ChatComponentText(sndr.getColor() + sndr.getUserName() + EnumChatFormatting.RESET + " is removed from " + g.getColor() + g.getName()));
 							sndr.updateDisplayName();
                         }else{
-                            sender.addChatMessage(new ChatComponentText(sndr.getColor() + sndr.getUserName() + SpecialChars.RESET + " is not in this group"));
+                            sender.addChatMessage(new ChatComponentText(sndr.getColor() + sndr.getUserName() + EnumChatFormatting.RESET + " is not in this group"));
                         }
                     }
                 }else{

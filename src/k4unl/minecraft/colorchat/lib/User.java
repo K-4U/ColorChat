@@ -2,9 +2,9 @@ package k4unl.minecraft.colorchat.lib;
 
 import k4unl.minecraft.colorchat.commands.CommandColor;
 import k4unl.minecraft.colorchat.lib.config.CCConfig;
-import k4unl.minecraft.k4lib.lib.SpecialChars;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.EnumChatFormatting;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -12,14 +12,14 @@ import java.util.Random;
 
 public class User {
 
-	private SpecialChars userColor;
+	private EnumChatFormatting userColor;
 	private String       nick;
 	private String       realUserName;
 	private boolean      hasNick;
 	private Group        group;
 	private EntityPlayer playerEntity;
 
-	public User(String _username, SpecialChars _userColor, String _nick) {
+	public User(String _username, EnumChatFormatting _userColor, String _nick) {
 
 		realUserName = _username;
 		userColor = _userColor;
@@ -50,7 +50,7 @@ public class User {
         }
 	}
 	
-	public SpecialChars getColor(){
+	public EnumChatFormatting getColor(){
 		return userColor;
 	}
 	
@@ -63,7 +63,7 @@ public class User {
 		hasNick = false;
 	}
 	
-	public void setUserColor(SpecialChars newColor){
+	public void setUserColor(EnumChatFormatting newColor){
 		userColor = newColor;
 	}
 

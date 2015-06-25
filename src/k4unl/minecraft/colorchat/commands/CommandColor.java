@@ -3,11 +3,11 @@ package k4unl.minecraft.colorchat.commands;
 import k4unl.minecraft.colorchat.lib.User;
 import k4unl.minecraft.colorchat.lib.Users;
 import k4unl.minecraft.colorchat.lib.config.CCConfig;
-import k4unl.minecraft.k4lib.lib.SpecialChars;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
 
 import java.util.*;
 
@@ -30,32 +30,32 @@ public class CommandColor extends CommandBase{
 		return true;
 	}
 
-	public static Map<String, SpecialChars> colors = new HashMap<String, SpecialChars>();
+	public static Map<String, EnumChatFormatting> colors = new HashMap<String, EnumChatFormatting>();
 
 	static {
-		colors.put("black", SpecialChars.BLACK);
-		colors.put("darkblue", SpecialChars.DBLUE);
-		colors.put("darkgreen", SpecialChars.DGREEN);
-		colors.put("darkaqua", SpecialChars.DAQUA);
-		colors.put("darkred", SpecialChars.DRED);
-		colors.put("darkpurple", SpecialChars.DPURPLE);
-		colors.put("gold", SpecialChars.GOLD);
-		colors.put("gray", SpecialChars.GRAY);
-		colors.put("darkgray", SpecialChars.DGRAY);
-		colors.put("blue", SpecialChars.BLUE);
-		colors.put("green", SpecialChars.GREEN);
-		colors.put("aqua", SpecialChars.AQUA);
-		colors.put("red", SpecialChars.RED);
-		colors.put("lightpurple", SpecialChars.LPURPLE);
-		colors.put("yellow", SpecialChars.YELLOW);
-		colors.put("white", SpecialChars.WHITE);
+		colors.put("black", EnumChatFormatting.BLACK);
+		colors.put("darkblue", EnumChatFormatting.DARK_BLUE);
+		colors.put("darkgreen", EnumChatFormatting.DARK_GREEN);
+		colors.put("darkaqua", EnumChatFormatting.DARK_AQUA);
+		colors.put("darkred", EnumChatFormatting.DARK_RED);
+		colors.put("darkpurple", EnumChatFormatting.DARK_PURPLE);
+		colors.put("gold", EnumChatFormatting.GOLD);
+		colors.put("gray", EnumChatFormatting.GRAY);
+		colors.put("darkgray", EnumChatFormatting.DARK_GRAY);
+		colors.put("blue", EnumChatFormatting.BLUE);
+		colors.put("green", EnumChatFormatting.GREEN);
+		colors.put("aqua", EnumChatFormatting.AQUA);
+		colors.put("red", EnumChatFormatting.RED);
+		colors.put("lightpurple", EnumChatFormatting.LIGHT_PURPLE);
+		colors.put("yellow", EnumChatFormatting.YELLOW);
+		colors.put("white", EnumChatFormatting.WHITE);
 	}
 
 	@Override
 	public String getCommandName() {
+
 		return "color";
 	}
-
 
 
 	@Override
