@@ -18,7 +18,10 @@ public class CCConfig extends Config {
         configOptions.add(new ConfigOption("mode", 1).setComment("Change the mode, [1]Colours can be changed by players, random on login/n" +
                                                                  "[2]Colours an be changed by players, saved between logins/n" +
                                                                  "[3]Only ops can change colours/n" +
-                                                                 "[4]Players, Ops have set colours"));
+                                                                 "[4]Players, Ops have set colours/n" +
+                                                                 "[5]Groups determine colours"));
+        configOptions.add(new ConfigOption("playerColor", "cyan"));
+        configOptions.add(new ConfigOption("opColor", "darkgreen"));
         configOptions.add(new ConfigOption("minimumNickLength", 4));
         configOptions.add(new ConfigOption("announceNickChanges", true));
         configOptions.add(new ConfigOption("nickChangeOPOnly", false));

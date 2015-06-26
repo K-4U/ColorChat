@@ -36,14 +36,16 @@ public class EventHelper {
             if (usr.getGroup() != null) {
                 userName += usr.getGroup().getColor() + "[" + usr.getGroup().getName() + "]";
             }
-            if (usr.hasNick()) {
-                userName += usr.getColor().toString();
-
-                userName += CCConfig.INSTANCE.getChar("leadingSymbolOnNick");
-
-                userName += usr.getNick() + "";
+            if(CCConfig.INSTANCE.getInt("mode") == 4) {
+                userName += usr.isOpped() ? CCConfig.INSTANCE.getString("opColor") : CCConfig.INSTANCE.getString("playerColor");
             } else {
-                userName += usr.getColor().toString() + "" + usr.getUserName() + "";
+                userName += usr.getColor().toString();
+            }
+            if (usr.hasNick()) {
+                userName += CCConfig.INSTANCE.getString("leadingSymbolOnNick");
+                userName += usr.getNick();
+            } else {
+                userName += usr.getUserName();
             }
             String chatMessage = EnumChatFormatting.RESET + "> " + event.message.replaceAll("%", "%%");
             String textMessage = userName + chatMessage;
@@ -65,16 +67,17 @@ public class EventHelper {
             if (usr.getGroup() != null) {
                 displayName += usr.getGroup().getColor() + "[" + usr.getGroup().getName() + "]";
             }
-            if (usr.hasNick()) {
-                displayName += usr.getColor().toString();
-
-                displayName += CCConfig.INSTANCE.getChar("leadingSymbolOnNick");
-
-                displayName += usr.getNick() + "";
+            if(CCConfig.INSTANCE.getInt("mode") == 4) {
+                displayName += usr.isOpped() ? CCConfig.INSTANCE.getString("opColor") : CCConfig.INSTANCE.getString("playerColor");
             } else {
-                displayName += usr.getColor().toString() + "" + usr.getUserName() + "";
+                displayName += usr.getColor().toString();
             }
-
+            if (usr.hasNick()) {
+                displayName += CCConfig.INSTANCE.getString("leadingSymbolOnNick");
+                displayName += usr.getNick();
+            } else {
+                displayName += usr.getUserName();
+            }
             event.displayname = displayName;
         }
     }
