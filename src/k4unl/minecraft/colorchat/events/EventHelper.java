@@ -2,15 +2,20 @@ package k4unl.minecraft.colorchat.events;
 
 import cpw.mods.fml.common.FMLCommonHandler;
 import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+import k4unl.minecraft.colorchat.lib.Colours;
+import k4unl.minecraft.colorchat.lib.Groups;
 import k4unl.minecraft.colorchat.lib.User;
 import k4unl.minecraft.colorchat.lib.Users;
 import k4unl.minecraft.colorchat.lib.config.CCConfig;
 import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
+import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.world.WorldEvent.Save;
+import cpw.mods.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 
 import java.util.List;
 
@@ -42,7 +47,7 @@ public class EventHelper {
                 userName += usr.getColor().toString();
             }
             if (usr.hasNick()) {
-                userName += CCConfig.INSTANCE.getString("leadingSymbolOnNick");
+                userName += CCConfig.INSTANCE.getChar("leadingSymbolOnNick");
                 userName += usr.getNick();
             } else {
                 userName += usr.getUserName();
@@ -73,12 +78,29 @@ public class EventHelper {
                 displayName += usr.getColor().toString();
             }
             if (usr.hasNick()) {
-                displayName += CCConfig.INSTANCE.getString("leadingSymbolOnNick");
+                displayName += CCConfig.INSTANCE.getChar("leadingSymbolOnNick");
                 displayName += usr.getNick();
             } else {
                 displayName += usr.getUserName();
             }
             event.displayname = displayName;
+        }
+    }
+
+    @SubscribeEvent
+    public void saveEvent(Save event) {
+
+        Users.saveToFile(DimensionManager.getCurrentSaveRootDirectory());
+        Groups.saveToFile(DimensionManager.getCurrentSaveRootDirectory());
+    }
+
+    @SubscribeEvent
+    public void playerLoggedIn(PlayerLoggedInEvent event) {
+
+        if(CCConfig.INSTANCE.getInt("mode") == 1) {
+            User user = Users.getUserByName(event.player.getCommandSenderName());
+            EnumChatFormatting colour = Colours.getRandomColour();
+            user.setUserColor(colour);
         }
     }
 }

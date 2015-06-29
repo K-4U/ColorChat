@@ -1,14 +1,11 @@
 package k4unl.minecraft.colorchat.lib;
 
-import k4unl.minecraft.colorchat.commands.CommandColor;
 import k4unl.minecraft.colorchat.lib.config.CCConfig;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.EnumChatFormatting;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class User {
 
@@ -17,7 +14,6 @@ public class User {
     private String             realUserName;
     private boolean            hasNick;
     private Group              group;
-    private EntityPlayer       playerEntity;
 
     public User(String _username, EnumChatFormatting _userColor, String _nick) {
 
@@ -29,13 +25,7 @@ public class User {
     public User(String _username) {
 
         realUserName = _username;
-        List<String> keysAsArray = new ArrayList<String>(CommandColor.colors.keySet());
-        String newClr = keysAsArray.get(new Random().nextInt(keysAsArray.size()));
-        while (CCConfig.INSTANCE.isColorBlackListed(newClr)) {
-            newClr = keysAsArray.get(new Random().nextInt(keysAsArray.size()));
-        }
-
-        userColor = CommandColor.colors.get(newClr);
+        userColor = Colours.getRandomColour();
     }
 
     public String getUserName() {
@@ -90,15 +80,10 @@ public class User {
 
     public EntityPlayer getPlayerEntity() {
 
-        if (playerEntity == null) {
-            for (EntityPlayer player : (List<EntityPlayer>) MinecraftServer.getServer().getEntityWorld().playerEntities) {
-                if (player.getGameProfile().getName().equals(this.getUserName())) {
-                    playerEntity = player;
-                    return player;
-                }
+        for (EntityPlayer player : (List<EntityPlayer>) MinecraftServer.getServer().getEntityWorld().playerEntities) {
+            if (player.getGameProfile().getName().equals(this.getUserName())) {
+                return player;
             }
-        } else {
-            return playerEntity;
         }
         return null;
     }

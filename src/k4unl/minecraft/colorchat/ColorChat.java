@@ -59,11 +59,4 @@ public class ColorChat {
         Users.readFromFile(DimensionManager.getCurrentSaveRootDirectory());
         Groups.readFromFile(DimensionManager.getCurrentSaveRootDirectory());
     }
-
-    @Mod.EventHandler
-    public void serverStop(FMLServerStoppingEvent event) {
-
-        Users.saveToFile(DimensionManager.getCurrentSaveRootDirectory());
-        Groups.saveToFile(DimensionManager.getCurrentSaveRootDirectory());
-    }
 }

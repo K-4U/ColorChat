@@ -1,9 +1,6 @@
 package k4unl.minecraft.colorchat.commands;
 
-import k4unl.minecraft.colorchat.lib.Group;
-import k4unl.minecraft.colorchat.lib.Groups;
-import k4unl.minecraft.colorchat.lib.User;
-import k4unl.minecraft.colorchat.lib.Users;
+import k4unl.minecraft.colorchat.lib.*;
 import k4unl.minecraft.colorchat.lib.config.CCConfig;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
@@ -14,7 +11,6 @@ import net.minecraftforge.common.DimensionManager;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 public class CommandGroup extends CommandBase {
 
@@ -41,7 +37,6 @@ public class CommandGroup extends CommandBase {
             return true;
         }
     }
-
 
     @Override
     public String getCommandName() {
@@ -138,27 +133,21 @@ public class CommandGroup extends CommandBase {
                         if (clr.equals("help")) {
                             CommandColor.printColors(sender);
                         } else if (clr.equals("random")) {
-                            List<String> keysAsArray = new ArrayList<String>(CommandColor.colors.keySet());
-                            String newClr = keysAsArray.get(new Random().nextInt(keysAsArray.size()));
-                            while (CCConfig.INSTANCE.isColorBlackListed(newClr)) {
-                                newClr = keysAsArray.get(new Random().nextInt(keysAsArray.size()));
-                            }
-
-                            g.setColor(CommandColor.colors.get(newClr));
+                            g.setColor(Colours.getRandomColour());
                             g.updateUsers();
-                            sender.addChatMessage(new ChatComponentText("The group color has now been set to " + CommandColor.colors.get(newClr) + newClr));
+                            sender.addChatMessage(new ChatComponentText("The group color has now been set to " + g.getColor()));
 
-                        } else if (CommandColor.colors.containsKey(clr)) {
+                        } else if (Colours.get(clr) != null) {
                             if (CCConfig.INSTANCE.isColorBlackListed(clr)) {
-                                sender.addChatMessage(new ChatComponentText(CommandColor.colors.get("red") + "This color has been blacklisted. Try " +
+                                sender.addChatMessage(new ChatComponentText(Colours.get("red") + "This color has been blacklisted. Try " +
                                                                             "another color!"));
                             } else {
-                                g.setColor(CommandColor.colors.get(clr));
+                                g.setColor(Colours.get(clr));
                                 g.updateUsers();
-                                sender.addChatMessage(new ChatComponentText("The group color has now been set to " + CommandColor.colors.get(clr) + clr));
+                                sender.addChatMessage(new ChatComponentText("The group color has now been set to " + Colours.get(clr) + clr));
                             }
                         } else {
-                            CommandColor.printColors(sender);
+                            sender.addChatMessage(new ChatComponentText("Valid Colours are: " + Colours.getColourList()));
                         }
                     }
                 }

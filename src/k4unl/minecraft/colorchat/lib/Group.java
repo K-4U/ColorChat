@@ -1,12 +1,7 @@
 package k4unl.minecraft.colorchat.lib;
 
-import k4unl.minecraft.colorchat.commands.CommandColor;
 import k4unl.minecraft.colorchat.lib.config.CCConfig;
 import net.minecraft.util.EnumChatFormatting;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
 
 public class Group {
 
@@ -22,13 +17,7 @@ public class Group {
     public Group(String _groupName) {
 
         groupName = _groupName;
-        List<String> keysAsArray = new ArrayList<String>(CommandColor.colors.keySet());
-        String newClr = keysAsArray.get(new Random().nextInt(keysAsArray.size()));
-        while (CCConfig.INSTANCE.isColorBlackListed(newClr)) {
-            newClr = keysAsArray.get(new Random().nextInt(keysAsArray.size()));
-        }
-
-        groupColor = CommandColor.colors.get(newClr);
+        groupColor = Colours.getRandomColour();
     }
 
     public String getName() {

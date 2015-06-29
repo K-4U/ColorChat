@@ -16,7 +16,7 @@ public class CCConfig extends Config {
     public void init() {
 
         configOptions.add(new ConfigOption("mode", 1).setComment("Change the mode, [1]Colours can be changed by players, random on login/n" +
-                                                                 "[2]Colours an be changed by players, saved between logins/n" +
+                                                                 "[2]Colours can be changed by players, saved between logins/n" +
                                                                  "[3]Only ops can change colours/n" +
                                                                  "[4]Players, Ops have set colours/n" +
                                                                  "[5]Groups determine colours"));
