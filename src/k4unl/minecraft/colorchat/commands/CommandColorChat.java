@@ -1,6 +1,5 @@
 package k4unl.minecraft.colorchat.commands;
 
-import k4unl.minecraft.colorchat.lib.Groups;
 import k4unl.minecraft.colorchat.lib.Users;
 import k4unl.minecraft.colorchat.lib.config.ModInfo;
 import k4unl.minecraft.k4lib.lib.Functions;

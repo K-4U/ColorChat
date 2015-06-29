@@ -9,50 +9,51 @@ import net.minecraft.util.ChatComponentText;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CommandRealName extends CommandBase{
+public class CommandRealName extends CommandBase {
 
-	private List<String> aliases;
+    private List<String> aliases;
 
-	public CommandRealName() {
+    public CommandRealName() {
 
-		aliases = new ArrayList<String>();
-		aliases.add("rn");
-	}
+        aliases = new ArrayList<String>();
+        aliases.add("rn");
+    }
 
-	public List getCommandAliases() {
+    public List getCommandAliases() {
 
-		return aliases;
-	}
+        return aliases;
+    }
 
-	@Override
-	public boolean canCommandSenderUseCommand(ICommandSender par1iCommandSender) {
+    @Override
+    public boolean canCommandSenderUseCommand(ICommandSender par1iCommandSender) {
 
-		return true;
-	}
+        return true;
+    }
 
-	@Override
-	public String getCommandName() {
+    @Override
+    public String getCommandName() {
 
-		return "realname";
-	}
+        return "realname";
+    }
 
-	@Override
-	public String getCommandUsage(ICommandSender sender) {
-		return "/realname <nick>";
-	}
+    @Override
+    public String getCommandUsage(ICommandSender sender) {
 
-	@Override
-	public void processCommand(ICommandSender sender, String[] var2) {
-		
-		if(var2.length == 0){
-			sender.addChatMessage(new ChatComponentText("Usage: /realname <nick>"));
-		}else{
-			User usr = Users.getUserByNick(var2[0]);
-			if(usr != null){
-				sender.addChatMessage(new ChatComponentText(var2[0] + " = " + usr.getUserName()));	
-			}else{
-				sender.addChatMessage(new ChatComponentText(var2[0] + " is not a registered nickname"));
-			}
-		}
-	}
+        return "/realname <nick>";
+    }
+
+    @Override
+    public void processCommand(ICommandSender sender, String[] var2) {
+
+        if (var2.length == 0) {
+            sender.addChatMessage(new ChatComponentText("Usage: /realname <nick>"));
+        } else {
+            User usr = Users.getUserByNick(var2[0]);
+            if (usr != null) {
+                sender.addChatMessage(new ChatComponentText(var2[0] + " = " + usr.getUserName()));
+            } else {
+                sender.addChatMessage(new ChatComponentText(var2[0] + " is not a registered nickname"));
+            }
+        }
+    }
 }

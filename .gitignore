@@ -13,3 +13,7 @@ hs_err_pid*
 
 .gradle/
 build/
+Colorchat.iml
+gradle/wrapper/gradle-wrapper.properties
+gradlew
+gradlew.bat
