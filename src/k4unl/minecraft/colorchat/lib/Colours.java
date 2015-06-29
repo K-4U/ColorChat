@@ -51,8 +51,9 @@ public class Colours {
         String colourString = "";
         Iterator ite = colors.keySet().iterator();
         while (ite.hasNext()) {
-            if (!CCConfig.INSTANCE.isColorBlackListed((String)ite.next())) {
-                colourString += ite.next();
+            String colour = (String)ite.next();
+            if (!CCConfig.INSTANCE.isColorBlackListed(colour)) {
+                colourString += colour;
             }
             if (ite.hasNext()) {
                 colourString += ", ";
