@@ -1,18 +1,14 @@
 package k4unl.minecraft.colorchat.commands;
 
+import k4unl.minecraft.colorchat.lib.Groups;
 import k4unl.minecraft.colorchat.lib.Users;
 import k4unl.minecraft.colorchat.lib.config.ModInfo;
-import k4unl.minecraft.k4lib.lib.Functions;
-import net.minecraft.command.CommandBase;
+import k4unl.minecraft.k4lib.commands.CommandK4OpOnly;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ChatComponentText;
 import net.minecraftforge.common.DimensionManager;
 
-/**
- * Created by koen_000 on 12-4-2015.
- */
-public class CommandColorChat extends CommandBase {
+public class CommandColorChat extends CommandK4OpOnly {
     @Override
     public String getCommandName() {
 
@@ -22,7 +18,7 @@ public class CommandColorChat extends CommandBase {
     @Override
     public String getCommandUsage(ICommandSender p_71518_1_) {
 
-        return null;
+        return "/colorchat version|save users/groups|load users/groups";
     }
 
     @Override
@@ -33,24 +29,20 @@ public class CommandColorChat extends CommandBase {
             }
             if(args[0].equals("save") && args.length > 1 && args[1].equals("users")){
                 Users.saveToFile(DimensionManager.getCurrentSaveRootDirectory());
+                sender.addChatMessage(new ChatComponentText("Saved users"));
             }
             if(args[0].equals("load") && args.length > 1 && args[1].equals("users")){
                 Users.readFromFile(DimensionManager.getCurrentSaveRootDirectory());
+                sender.addChatMessage(new ChatComponentText("Loaded users"));
+            }
+            if(args[0].equals("save") && args.length > 1 && args[1].equals("groups")){
+                Groups.saveToFile(DimensionManager.getCurrentSaveRootDirectory());
+                sender.addChatMessage(new ChatComponentText("Saved groups"));
+            }
+            if(args[0].equals("load") && args.length > 1 && args[1].equals("groups")){
+                Groups.readFromFile(DimensionManager.getCurrentSaveRootDirectory());
+                sender.addChatMessage(new ChatComponentText("Loaded groups"));
             }
         }
-
     }
-
-    @Override
-    public boolean canCommandSenderUseCommand(ICommandSender sender){
-        if(sender.getCommandSenderName().equals("K4Unl") || sender.getCommandSenderName().equals("ThatsMe")){
-            return true;
-        }
-        if(sender instanceof EntityPlayerMP){
-            return Functions.isPlayerOpped(((EntityPlayerMP) sender).getGameProfile());
-        } else {
-            return true;
-        }
-    }
-
 }

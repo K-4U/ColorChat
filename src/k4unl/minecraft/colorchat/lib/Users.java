@@ -1,8 +1,10 @@
 package k4unl.minecraft.colorchat.lib;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 import java.io.*;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -82,8 +84,8 @@ public class Users {
                 ipStream.close();
                 bReader.close();
 
-                ArrayList myTypeMap = new ArrayList<List<User>>();
-                userList = gson.fromJson(json, myTypeMap.getClass());
+                Type myTypeMap = new TypeToken<List<User>>(){}.getType();
+                userList = gson.fromJson(json, myTypeMap);
                 if (userList == null) {
                     userList = new ArrayList<User>();
                 }

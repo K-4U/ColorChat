@@ -2,32 +2,15 @@ package k4unl.minecraft.colorchat.commands;
 
 import k4unl.minecraft.colorchat.lib.User;
 import k4unl.minecraft.colorchat.lib.Users;
-import net.minecraft.command.CommandBase;
+import k4unl.minecraft.k4lib.commands.CommandK4Base;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.util.ChatComponentText;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class CommandRealName extends CommandBase {
-
-    private List<String> aliases;
+public class CommandRealName extends CommandK4Base {
 
     public CommandRealName() {
 
-        aliases = new ArrayList<String>();
         aliases.add("rn");
-    }
-
-    public List getCommandAliases() {
-
-        return aliases;
-    }
-
-    @Override
-    public boolean canCommandSenderUseCommand(ICommandSender par1iCommandSender) {
-
-        return true;
     }
 
     @Override

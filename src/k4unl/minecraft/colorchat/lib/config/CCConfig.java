@@ -23,9 +23,11 @@ public class CCConfig extends Config {
         configOptions.add(new ConfigOption("playerColor", "cyan"));
         configOptions.add(new ConfigOption("opColor", "darkgreen"));
         configOptions.add(new ConfigOption("minimumNickLength", 4));
+        configOptions.add(new ConfigOption("maximumNickLength", 12));
         configOptions.add(new ConfigOption("announceNickChanges", true));
         configOptions.add(new ConfigOption("nickChangeOPOnly", false));
         configOptions.add(new ConfigOption("leadingSymbolOnNick", '~'));
+
         configOptions.add(new ConfigOption("changeDisplayName", true).setComment("Disable this if you want to use a mod that has bad coding and "
                                                                                  + "depends on displayName"));
     }

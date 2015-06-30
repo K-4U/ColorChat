@@ -4,35 +4,20 @@ import k4unl.minecraft.colorchat.lib.Colours;
 import k4unl.minecraft.colorchat.lib.User;
 import k4unl.minecraft.colorchat.lib.Users;
 import k4unl.minecraft.colorchat.lib.config.CCConfig;
-import net.minecraft.command.CommandBase;
+import k4unl.minecraft.k4lib.commands.CommandK4Base;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
 
-import java.util.*;
+import java.util.List;
 
-public class CommandColor extends CommandBase {
-
-    private List<String> aliases;
+public class CommandColor extends CommandK4Base {
 
     public CommandColor() {
 
-        aliases = new ArrayList<String>();
         aliases.add("clr");
-    }
-
-    @Override
-    public List getCommandAliases() {
-
         aliases.add("colour");
-        return aliases;
-    }
-
-    @Override
-    public boolean canCommandSenderUseCommand(ICommandSender par1iCommandSender) {
-
-        return true;
     }
 
     @Override

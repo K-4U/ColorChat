@@ -2,40 +2,17 @@ package k4unl.minecraft.colorchat.commands;
 
 import k4unl.minecraft.colorchat.lib.*;
 import k4unl.minecraft.colorchat.lib.config.CCConfig;
-import net.minecraft.command.CommandBase;
+import k4unl.minecraft.k4lib.commands.CommandOpOnly;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraftforge.common.DimensionManager;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class CommandGroup extends CommandBase {
-
-
-    private List<String> aliases;
+public class CommandGroup extends CommandOpOnly {
 
     public CommandGroup() {
 
-        aliases = new ArrayList<String>();
         aliases.add("gr");
-    }
-
-    public List getCommandAliases() {
-
-        return aliases;
-    }
-
-    @Override
-    public boolean canCommandSenderUseCommand(ICommandSender sender) {
-
-        if (sender instanceof EntityPlayerMP) {
-            return true;//Functions.isPlayerOpped(((EntityPlayerMP) sender).getGameProfile());
-        } else {
-            return true;
-        }
     }
 
     @Override
@@ -47,7 +24,7 @@ public class CommandGroup extends CommandBase {
     @Override
     public String getCommandUsage(ICommandSender sender) {
 
-        return "/group [list]/[create <name>]/[remove <name>]/[addUser <group> <name>]/[delUser <group> <name>]/[color <group> <color>]/[save]/[load]";
+        return "/group list|create <name>|remove <name>|addUser <group> <name>|delUser <group> <name>|color <group> <color>|save|load";
     }
 
     @Override
@@ -155,17 +132,5 @@ public class CommandGroup extends CommandBase {
                 sender.addChatMessage(new ChatComponentText(Groups.getGroupNames()));
             }
         }
-    }
-
-    @Override
-    public boolean isUsernameIndex(String[] p_82358_1_, int p_82358_2_) {
-
-        return false;
-    }
-
-    @Override
-    public int compareTo(Object o) {
-
-        return 0;
     }
 }

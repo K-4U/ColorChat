@@ -1,9 +1,11 @@
 package k4unl.minecraft.colorchat.lib;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import net.minecraft.util.EnumChatFormatting;
 
 import java.io.*;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -88,8 +90,8 @@ public class Groups {
                 ipStream.close();
                 bReader.close();
 
-                ArrayList myTypeMap = new ArrayList<List<Group>>();
-                groupList = gson.fromJson(json, myTypeMap.getClass());
+                Type myTypeMap = new TypeToken<List<Group>>(){}.getType();
+                groupList = gson.fromJson(json, myTypeMap);
                 if (groupList == null) {
                     groupList = new ArrayList<Group>();
                 }
