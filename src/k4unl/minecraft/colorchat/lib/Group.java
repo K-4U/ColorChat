@@ -1,53 +1,48 @@
 package k4unl.minecraft.colorchat.lib;
 
-import k4unl.minecraft.colorchat.commands.CommandColor;
 import k4unl.minecraft.colorchat.lib.config.CCConfig;
-import k4unl.minecraft.k4lib.lib.SpecialChars;
-
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import net.minecraft.util.EnumChatFormatting;
 
 public class Group {
 
-	private String       groupName;
-	private SpecialChars groupColor;
+    private String             groupName;
+    private EnumChatFormatting groupColor;
 
-	public Group(String _groupName, SpecialChars _groupColor) {
+    public Group(String _groupName, EnumChatFormatting _groupColor) {
 
-		groupName = _groupName;
-		groupColor = _groupColor;
-	}
+        groupName = _groupName;
+        groupColor = _groupColor;
+    }
 
-	public Group(String _groupName) {
+    public Group(String _groupName) {
 
-		groupName = _groupName;
-		List<String> keysAsArray = new ArrayList<String>(CommandColor.colors.keySet());
-		String newClr = keysAsArray.get(new Random().nextInt(keysAsArray.size()));
-        while(CCConfig.INSTANCE.isColorBlackListed(newClr)){
-            newClr = keysAsArray.get(new Random().nextInt(keysAsArray.size()));
+        groupName = _groupName;
+        groupColor = Colours.getRandomColour();
+    }
+
+    public String getName() {
+
+        return groupName;
+    }
+
+    public EnumChatFormatting getColor() {
+
+        return groupColor;
+    }
+
+    public void setColor(EnumChatFormatting newColor) {
+
+        groupColor = newColor;
+    }
+
+    public void updateUsers() {
+
+        if (CCConfig.INSTANCE.getBool("changeDisplayName")) {
+            for (User u : Users.getUsersByGroup(this)) {
+                if (u.getPlayerEntity() != null) {
+                    u.getPlayerEntity().refreshDisplayName();
+                }
+            }
         }
-
-        groupColor = CommandColor.colors.get(newClr);
-	}
-
-	public String getName() {
-		return groupName;
-	}
-	
-	public SpecialChars getColor(){
-		return groupColor;
-	}
-
-	public void setColor(SpecialChars newColor) {
-		groupColor = newColor;
-	}
-
-	public void updateUsers(){
-		for(User u: Users.getUsersByGroup(this)){
-			if(u.getPlayerEntity() != null){
-				u.getPlayerEntity().refreshDisplayName();
-			}
-		}
-	}
+    }
 }

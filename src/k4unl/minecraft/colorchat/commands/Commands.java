@@ -1,5 +1,6 @@
 package k4unl.minecraft.colorchat.commands;
 
+
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 
 public class Commands {
@@ -10,5 +11,6 @@ public class Commands {
 		event.registerServerCommand(new CommandRealName());
 		event.registerServerCommand(new CommandGroup());
 		event.registerServerCommand(new CommandCoords());
+        event.registerServerCommand(new CommandColorChat());
 	}
 }

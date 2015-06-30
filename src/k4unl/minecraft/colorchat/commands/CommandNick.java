@@ -1,34 +1,23 @@
 package k4unl.minecraft.colorchat.commands;
 
 import k4unl.minecraft.colorchat.lib.Log;
-import k4unl.minecraft.k4lib.lib.SpecialChars;
 import k4unl.minecraft.colorchat.lib.User;
 import k4unl.minecraft.colorchat.lib.Users;
 import k4unl.minecraft.colorchat.lib.config.CCConfig;
+import k4unl.minecraft.k4lib.commands.CommandK4Base;
 import k4unl.minecraft.k4lib.lib.Functions;
-import net.minecraft.command.CommandBase;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.EnumChatFormatting;
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class CommandNick extends CommandBase {
-
-
-
-    private List<String> aliases;
+public class CommandNick extends CommandK4Base {
 
     public CommandNick(){
-        aliases = new ArrayList<String>();
+
         aliases.add("nck");
     }
 
-    public List getCommandAliases() {
-
-        return aliases;
-    }
 
 	@Override
 	public boolean canCommandSenderUseCommand(ICommandSender sender){
@@ -82,7 +71,7 @@ public class CommandNick extends CommandBase {
         }
 		if(nickToSet.equals("")){
             if(CCConfig.INSTANCE.getBool("announceNickChanges")){
-                Functions.sendChatMessageServerWide(sender.getEntityWorld(), new ChatComponentText(SpecialChars.GOLD + target.getNick() + "(" + target.getUserName() + ") is now called " + target.getUserName()));
+                Functions.sendChatMessageServerWide(sender.getEntityWorld(), new ChatComponentText(EnumChatFormatting.GOLD + target.getNick() + "(" + target.getUserName() + ") is now called " + target.getUserName()));
             }
             target.resetNick();
             target.updateDisplayName();
@@ -91,33 +80,23 @@ public class CommandNick extends CommandBase {
             nickToSet = nickToSet.replace("[", "").replace("]", "");
             if(CCConfig.INSTANCE.isNickBlackListed(nickToSet)){
                 Log.error(target.getUserName() + " tried to set a banned nick (" + nickToSet + ")");
-                sender.addChatMessage(new ChatComponentText(SpecialChars.RED + "This nick is banned! You have been reported!"));
+                sender.addChatMessage(new ChatComponentText(EnumChatFormatting.RED + "This nick is banned! You have been reported!"));
                 return;
             }
-            if(nickToSet.length() >= CCConfig.INSTANCE.getInt("minimumNickLength")){
+            if(nickToSet.length() >= CCConfig.INSTANCE.getInt("minimumNickLength") && nickToSet.length() <= CCConfig.INSTANCE.getInt("maximumNickLength")){
                 if(CCConfig.INSTANCE.getBool("announceNickChanges")){
-                    Functions.sendChatMessageServerWide(sender.getEntityWorld(), new ChatComponentText(SpecialChars.GOLD + "~" + target.getNick() +
+                    Functions.sendChatMessageServerWide(sender.getEntityWorld(), new ChatComponentText(EnumChatFormatting.GOLD + "~" + target.getNick() +
                       "(" + target.getUserName() + ") is now called " + nickToSet));
                 }
                 target.setNick(nickToSet);
                 target.updateDisplayName();
                 sender.addChatMessage(new ChatComponentText("Nick is set to " + nickToSet));
-                ((EntityPlayerMP) sender).refreshDisplayName();
+                if(CCConfig.INSTANCE.getBool("changeDisplayName")) {
+                    ((EntityPlayerMP) sender).refreshDisplayName();
+                }
             }else{
-                sender.addChatMessage(new ChatComponentText("Your nick should be at least " + CCConfig.INSTANCE.getInt("minimumNickLength") + " characters long."));
+                sender.addChatMessage(new ChatComponentText("Your nick should be between " + CCConfig.INSTANCE.getInt("minimumNickLength") + " and " + CCConfig.INSTANCE.getInt("maximumNickLength") + " characters long."));
             }
 		}
 	}
-
-    @Override
-    public boolean isUsernameIndex(String[] p_82358_1_, int p_82358_2_) {
-
-        return false;
-    }
-
-    @Override
-    public int compareTo(Object o) {
-
-        return 0;
-    }
 }

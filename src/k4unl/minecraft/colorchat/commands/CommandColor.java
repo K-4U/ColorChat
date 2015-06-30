@@ -1,116 +1,109 @@
 package k4unl.minecraft.colorchat.commands;
 
+import k4unl.minecraft.colorchat.lib.Colours;
 import k4unl.minecraft.colorchat.lib.User;
 import k4unl.minecraft.colorchat.lib.Users;
 import k4unl.minecraft.colorchat.lib.config.CCConfig;
-import k4unl.minecraft.k4lib.lib.SpecialChars;
-import net.minecraft.command.CommandBase;
+import k4unl.minecraft.k4lib.commands.CommandK4Base;
+import k4unl.minecraft.k4lib.lib.Functions;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
 
-import java.util.*;
+import java.util.List;
 
-public class CommandColor extends CommandBase{
+public class CommandColor extends CommandK4Base {
 
-	private List<String> aliases;
+    public CommandColor() {
 
-	public CommandColor(){
-		aliases = new ArrayList<String>();
-		aliases.add("clr");
-	}
+        aliases.add("clr");
+        aliases.add("colour");
+    }
 
-	public List getCommandAliases() {
+    @Override
+    public String getCommandName() {
 
-		return aliases;
-	}
+        return "color";
+    }
 
-	@Override
-	public boolean canCommandSenderUseCommand(ICommandSender par1iCommandSender){
-		return true;
-	}
-	
-	public static Map<String, SpecialChars> colors = new HashMap<String, SpecialChars>(); 
-	
-	static {
-		colors.put("black", SpecialChars.BLACK);
-		colors.put("darkblue", SpecialChars.DBLUE);
-		colors.put("darkgreen", SpecialChars.DGREEN);
-		colors.put("darkaqua", SpecialChars.DAQUA);
-		colors.put("darkred", SpecialChars.DRED);
-		colors.put("darkpurple", SpecialChars.DPURPLE);
-		colors.put("gold", SpecialChars.GOLD);
-		colors.put("gray", SpecialChars.GRAY);
-		colors.put("darkgray", SpecialChars.DGRAY);
-		colors.put("blue", SpecialChars.BLUE);
-		colors.put("green", SpecialChars.GREEN);
-		colors.put("aqua", SpecialChars.AQUA);
-		colors.put("red", SpecialChars.RED);
-		colors.put("lightpurple", SpecialChars.LPURPLE);
-		colors.put("yellow", SpecialChars.YELLOW);
-		colors.put("white", SpecialChars.WHITE);
-	}
-	
-	@Override
-	public String getCommandName() {
-		return "color";
-	}
+    @Override
+    public String getCommandUsage(ICommandSender sender) {
 
+        return "/color " + Colours.getColourList();
+    }
 
+    public static void printColors(ICommandSender sender) {
 
-	@Override
-	public String getCommandUsage(ICommandSender sender) {
-		return "/color " + getColors();
-	}
+        sender.addChatMessage(new ChatComponentText("Available colors are " + Colours.getColourList()));
+    }
 
-	public static String getColors(){
-		String colorString = "";
-		for(String c: colors.keySet()){
-            if(!CCConfig.INSTANCE.isColorBlackListed(c)){
-			    colorString += ", " + c;
+    @Override
+    public void processCommand(ICommandSender sender, String[] var2) {
+
+        User sndr = Users.getUserByName(sender.getName());
+
+        boolean isOp = sndr.isOpped();
+        int mode = CCConfig.INSTANCE.getInt("mode");
+
+        if(mode == 1 || mode == 2 || (mode == 3 && isOp)) {
+            if (var2.length == 0) {
+                printColors(sender);
+            } else {
+                String clr = var2[0].toLowerCase();
+                if (clr.equals("help")) {
+                    printColors(sender);
+                } else if (clr.equals("random")) {
+                    sndr.setUserColor(Colours.getRandomColour());
+                    sender.addChatMessage(new ChatComponentText("Your color has now been set to " + sndr.getColor()));
+                    if (CCConfig.INSTANCE.getBool("changeDisplayName")) {
+                        if (sender instanceof EntityPlayer) {
+                            ((EntityPlayer) sender).refreshDisplayName();
+                        }
+                    }
+                } else if (Colours.get(clr) != null) {
+                    if (CCConfig.INSTANCE.isColorBlackListed(clr)) {
+                        sender.addChatMessage(new ChatComponentText(Colours.get("red") + "This color has been blacklisted. Try another color!"));
+                    } else {
+                        sndr.setUserColor(Colours.get(clr));
+                        sender.addChatMessage(new ChatComponentText("Your color has now been set to " + sndr.getColor()));
+                        if (CCConfig.INSTANCE.getBool("changeDisplayName")) {
+                            if (sender instanceof EntityPlayer) {
+                                ((EntityPlayer) sender).refreshDisplayName();
+                            }
+                        }
+                    }
+                } else {
+                    printColors(sender);
+                }
             }
-		}
-		return colorString;
-	}
-	
-	public static void printColors(ICommandSender sender){
-		sender.addChatMessage(new ChatComponentText("Available colors are " + getColors()));
-	}
-	
-	@Override
-	public void processCommand(ICommandSender sender, String[] var2) {
-		User sndr = Users.getUserByName(sender.getName());
-		if(var2.length == 0){
-			printColors(sender);
-		}else{
-			String clr = var2[0].toLowerCase();
-			if(clr.equals("help")){
-				printColors(sender);
-			}else if(clr.equals("random")){
-                List<String> keysAsArray = new ArrayList<String>(colors.keySet());
-                String newClr = keysAsArray.get(new Random().nextInt(keysAsArray.size()));
-                while(CCConfig.INSTANCE.isColorBlackListed(newClr)){
-				    newClr = keysAsArray.get(new Random().nextInt(keysAsArray.size()));
+            if (mode == 3) {
+                if (var2.length == 2) {
+                    if (Users.getUserByName(var2[0]) != null) {
+                        if (Colours.get(var2[1]) != null) {
+                            if (CCConfig.INSTANCE.isColorBlackListed(var2[1])) {
+                                Users.getUserByName(var2[0]).setUserColor(Colours.get(var2[1]));
+                                sender.addChatMessage(new ChatComponentText("Color for " + var2[0] + " has been set to " + var2[1]));
+                                if (CCConfig.INSTANCE.getBool("changeDisplayName")) {
+                                    EntityPlayer target = null;
+                                    for (EntityPlayer player : (List<EntityPlayer>)MinecraftServer.getServer().getConfigurationManager().playerEntityList) {
+                                        if(player.getName().equalsIgnoreCase(var2[0])) {
+                                            target = player;
+                                        }
+                                    }
+                                    if (target != null) {
+                                        target.refreshDisplayName();
+                                    }
+                                }
+                            } else {
+                                sender.addChatMessage(new ChatComponentText(Colours.get("red") + "This color has been blacklisted. Try another color!"));
+                            }
+                        }
+                    }
                 }
-				
-				sndr.setUserColor(colors.get(newClr));
-				sender.addChatMessage(new ChatComponentText("Your color has now been set to " + colors.get(newClr) + newClr));
-				if(sender.getCommandSenderEntity() instanceof EntityPlayer){
-					((EntityPlayer)sender.getCommandSenderEntity()).refreshDisplayName();
-				}
-			}else if(colors.containsKey(clr)){
-                if(CCConfig.INSTANCE.isColorBlackListed(clr)){
-                    sender.addChatMessage(new ChatComponentText(colors.get("red") + "This color has been blacklisted. Try another color!"));
-                }else{
-				    sndr.setUserColor(colors.get(clr));
-				    sender.addChatMessage(new ChatComponentText("Your color has now been set to " + colors.get(clr) + clr));
-					if(sender.getCommandSenderEntity() instanceof EntityPlayer){
-						((EntityPlayer)sender.getCommandSenderEntity()).refreshDisplayName();
-					}
-                }
-			}else{
-				printColors(sender);
-			}
-		}
-	}
+            }
+        } else {
+            sender.addChatMessage(new ChatComponentText("This command is disabled on this server."));
+        }
+    }
 }

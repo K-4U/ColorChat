@@ -1,49 +1,28 @@
 package k4unl.minecraft.colorchat.commands;
 
-import net.minecraft.command.CommandBase;
+import k4unl.minecraft.k4lib.commands.CommandK4Base;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ChatComponentText;
 
-import java.util.ArrayList;
-import java.util.List;
+public class CommandCoords extends CommandK4Base {
 
-public class CommandCoords extends CommandBase{
+    @Override
+    public String getCommandName() {
 
-	private List<String> aliases;
+        return "coords";
+    }
 
-	public CommandCoords() {
+    @Override
+    public String getCommandUsage(ICommandSender sender) {
 
-		aliases = new ArrayList<String>();
-		aliases.add("cr");
-	}
+        return "/coords. Print coordinates you're at.";
+    }
 
-	public List getCommandAliases() {
+    @Override
+    public void processCommand(ICommandSender sender, String[] var2) {
 
-		return aliases;
-	}
-
-	@Override
-	public boolean canCommandSenderUseCommand(ICommandSender par1iCommandSender) {
-
-		return true;
-	}
-
-	@Override
-	public String getCommandName() {
-
-		return "coords";
-	}
-
-	@Override
-	public String getCommandUsage(ICommandSender sender) {
-		return "/coords. Print coordinates you're at.";
-	}
-
-	@Override
-	public void processCommand(ICommandSender sender, String[] var2) {
-		String senderCoords = sender.getName() + " is at [" + sender.getPosition().getX() + ", " + sender.getPosition().getY() + ", " + sender.getPosition().getZ() + "]";
-		((EntityPlayerMP)sender).mcServer.getConfigurationManager().sendChatMsg(new ChatComponentText(senderCoords));
-	}
-
+        String senderCoords = sender.getName() + " is at [" + sender.getPosition().getX() + ", " + sender.getPosition().getY() + ", " + sender.getPosition().getZ() + "]";
+        ((EntityPlayerMP) sender).mcServer.getConfigurationManager().sendChatMsg(new ChatComponentText(senderCoords));
+    }
 }
