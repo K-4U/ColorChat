@@ -5,9 +5,9 @@ import k4unl.minecraft.colorchat.lib.User;
 import k4unl.minecraft.colorchat.lib.Users;
 import k4unl.minecraft.colorchat.lib.config.CCConfig;
 import k4unl.minecraft.k4lib.commands.CommandK4Base;
-import k4unl.minecraft.k4lib.lib.Functions;
 import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.ChatComponentText;
 
@@ -85,8 +85,8 @@ public class CommandColor extends CommandK4Base {
                                 Users.getUserByName(var2[0]).setUserColor(Colours.get(var2[1]));
                                 sender.addChatMessage(new ChatComponentText("Color for " + var2[0] + " has been set to " + var2[1]));
                                 if (CCConfig.INSTANCE.getBool("changeDisplayName")) {
-                                    EntityPlayer target = null;
-                                    for (EntityPlayer player : (List<EntityPlayer>)MinecraftServer.getServer().getConfigurationManager().playerEntityList) {
+                                    EntityPlayerMP target = null;
+                                    for (EntityPlayerMP player : (List<EntityPlayerMP>)MinecraftServer.getServer().getConfigurationManager().playerEntityList) {
                                         if(player.getName().equalsIgnoreCase(var2[0])) {
                                             target = player;
                                         }
