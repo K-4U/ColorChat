@@ -1,6 +1,7 @@
 package k4unl.minecraft.colorchat.commands;
 
 
+import k4unl.minecraft.k4lib.commands.CommandCoords;
 import net.minecraftforge.fml.common.event.FMLServerStartingEvent;
 
 public class Commands {

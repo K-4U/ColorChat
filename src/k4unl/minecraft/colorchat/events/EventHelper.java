@@ -5,15 +5,14 @@ import k4unl.minecraft.colorchat.lib.Groups;
 import k4unl.minecraft.colorchat.lib.User;
 import k4unl.minecraft.colorchat.lib.Users;
 import k4unl.minecraft.colorchat.lib.config.CCConfig;
-import net.minecraft.util.ChatComponentTranslation;
-import net.minecraft.util.EnumChatFormatting;
-import net.minecraft.util.IChatComponent;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.DimensionManager;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.WorldEvent.Save;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 
@@ -25,17 +24,16 @@ public class EventHelper {
     public static void init() {
 
         MinecraftForge.EVENT_BUS.register(new EventHelper());
-        FMLCommonHandler.instance().bus().register(new EventHelper());
     }
 
     @SubscribeEvent
     public void chatEvent(ServerChatEvent event) {
         //Log.info("We got a chat message: " + event.username + ":" + event.message);
         if (!CCConfig.INSTANCE.getBool("changeDisplayName")) {
-            ChatComponentTranslation orig = (ChatComponentTranslation)event.getComponent().createCopy();
+            TextComponentTranslation orig = (TextComponentTranslation) event.getComponent().createCopy();
             List siblings = orig.getSiblings();
 
-            User usr = Users.getUserByName(event.username);
+            User usr = Users.getUserByName(event.getUsername());
 
             String userName = "<";
             if (usr.getGroup() != null) {
@@ -52,13 +50,13 @@ public class EventHelper {
             } else {
                 userName += usr.getUserName();
             }
-            String chatMessage = EnumChatFormatting.RESET + "> " + event.message.replaceAll("%", "%%");
+            String chatMessage = TextFormatting.RESET + "> " + event.getMessage().replaceAll("%", "%%");
             String textMessage = userName + chatMessage;
 
-            ChatComponentTranslation end = new ChatComponentTranslation(textMessage);
+            TextComponentTranslation end = new TextComponentTranslation(textMessage);
 
             for (Object s : siblings) {
-                end.appendSibling((IChatComponent) s);
+                end.appendSibling((ITextComponent) s);
             }
 
             event.setComponent(end);
@@ -70,12 +68,12 @@ public class EventHelper {
     public void getDisplayNameEvent(PlayerEvent.NameFormat event) {
 
         if (CCConfig.INSTANCE.getBool("changeDisplayName")) {
-            User usr = Users.getUserByName(event.entityPlayer.getGameProfile().getName());
+            User usr = Users.getUserByName(event.getEntityPlayer().getGameProfile().getName());
             String displayName = "";
             if (usr.getGroup() != null) {
                 displayName += usr.getGroup().getColor() + "[" + usr.getGroup().getName() + "]";
             }
-            if(CCConfig.INSTANCE.getInt("mode") == 4) {
+            if (CCConfig.INSTANCE.getInt("mode") == 4) {
                 displayName += usr.isOpped() ? CCConfig.INSTANCE.getString("opColor") : CCConfig.INSTANCE.getString("playerColor");
             } else {
                 displayName += usr.getColor().toString();
@@ -86,7 +84,7 @@ public class EventHelper {
             } else {
                 displayName += usr.getUserName();
             }
-            event.displayname = displayName;
+            event.setDisplayname(displayName);
         }
     }
 
@@ -100,9 +98,9 @@ public class EventHelper {
     @SubscribeEvent
     public void playerLoggedIn(PlayerLoggedInEvent event) {
 
-        if(CCConfig.INSTANCE.getInt("mode") == 1) {
+        if (CCConfig.INSTANCE.getInt("mode") == 1) {
             User user = Users.getUserByName(event.player.getName());
-            EnumChatFormatting colour = Colours.getRandomColour();
+            TextFormatting colour = Colours.getRandomColour();
             user.setUserColor(colour);
         }
     }

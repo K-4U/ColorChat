@@ -3,9 +3,11 @@ package k4unl.minecraft.colorchat.commands;
 import k4unl.minecraft.colorchat.lib.*;
 import k4unl.minecraft.colorchat.lib.config.CCConfig;
 import k4unl.minecraft.k4lib.commands.CommandOpOnly;
+import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.common.DimensionManager;
 
 public class CommandGroup extends CommandOpOnly {
@@ -28,108 +30,108 @@ public class CommandGroup extends CommandOpOnly {
     }
 
     @Override
-    public void processCommand(ICommandSender sender, String[] var2) {
+    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
 
-        if (var2.length == 0) {
-            sender.addChatMessage(new ChatComponentText("Usage: " + getCommandUsage(sender)));
+        if (args.length == 0) {
+            sender.addChatMessage(new TextComponentString("Usage: " + getCommandUsage(sender)));
         } else {
-            if (var2[0].equals("create")) {
-                if (var2.length == 2) {
-                    if (Groups.getGroupByName(var2[1]) == null) {
-                        Group g = Groups.createNewGroup(var2[1]);
-                        sender.addChatMessage(new ChatComponentText("Group " + g.getColor() + var2[1] + "" + EnumChatFormatting.RESET + " has been created"));
+            if (args[0].equals("create")) {
+                if (args.length == 2) {
+                    if (Groups.getGroupByName(args[1]) == null) {
+                        Group g = Groups.createNewGroup(args[1]);
+                        sender.addChatMessage(new TextComponentString("Group " + g.getColor() + args[1] + "" + TextFormatting.RESET + " has been created"));
                     } else {
-                        sender.addChatMessage(new ChatComponentText("This group already exists"));
+                        sender.addChatMessage(new TextComponentString("This group already exists"));
                     }
                 } else {
-                    sender.addChatMessage(new ChatComponentText("Usage: /group create <name>"));
+                    sender.addChatMessage(new TextComponentString("Usage: /group create <name>"));
                 }
-            } else if (var2[0].equals("remove")) {
-                if (var2.length == 2) {
-                    if (Groups.getGroupByName(var2[1]) != null) {
-                        Group g = Groups.getGroupByName(var2[1]);
-                        sender.addChatMessage(new ChatComponentText("Group " + g.getColor() + var2[1] + "" + EnumChatFormatting.RESET + " has been removed"));
+            } else if (args[0].equals("remove")) {
+                if (args.length == 2) {
+                    if (Groups.getGroupByName(args[1]) != null) {
+                        Group g = Groups.getGroupByName(args[1]);
+                        sender.addChatMessage(new TextComponentString("Group " + g.getColor() + args[1] + "" + TextFormatting.RESET + " has been removed"));
                         g.updateUsers();
-                        Groups.removeGroupByName(var2[1]);
+                        Groups.removeGroupByName(args[1]);
                     } else {
-                        sender.addChatMessage(new ChatComponentText("This group doesn't exists"));
+                        sender.addChatMessage(new TextComponentString("This group doesn't exists"));
                     }
                 } else {
-                    sender.addChatMessage(new ChatComponentText("Usage: /group remove <name>"));
+                    sender.addChatMessage(new TextComponentString("Usage: /group remove <name>"));
                 }
-            } else if (var2[0].equals("save")) {
+            } else if (args[0].equals("save")) {
                 Groups.saveToFile(DimensionManager.getCurrentSaveRootDirectory());
-                sender.addChatMessage(new ChatComponentText("Groups saved to file!"));
-            } else if (var2[0].equals("load")) {
+                sender.addChatMessage(new TextComponentString("Groups saved to file!"));
+            } else if (args[0].equals("load")) {
                 Groups.readFromFile(DimensionManager.getCurrentSaveRootDirectory());
-                sender.addChatMessage(new ChatComponentText("Groups loaded from file!"));
+                sender.addChatMessage(new TextComponentString("Groups loaded from file!"));
                 Groups.updateAll();
-            } else if (var2[0].equals("addUser")) {
-                if (var2.length == 3) {
-                    if (Groups.getGroupByName(var2[1]) == null) {
-                        sender.addChatMessage(new ChatComponentText("This group does not exist"));
+            } else if (args[0].equals("addUser")) {
+                if (args.length == 3) {
+                    if (Groups.getGroupByName(args[1]) == null) {
+                        sender.addChatMessage(new TextComponentString("This group does not exist"));
                     } else {
-                        Group g = Groups.getGroupByName(var2[1]);
-                        User sndr = Users.getUserByName(var2[2]);
+                        Group g = Groups.getGroupByName(args[1]);
+                        User sndr = Users.getUserByName(args[2]);
                         if (sndr.getGroup() != null && sndr.getGroup().equals(g)) {
-                            sender.addChatMessage(new ChatComponentText(sndr.getColor() + sndr.getUserName() + EnumChatFormatting.RESET + " is already in this group."));
+                            sender.addChatMessage(new TextComponentString(sndr.getColor() + sndr.getUserName() + TextFormatting.RESET + " is already in this group."));
                         } else {
                             sndr.setGroup(g);
                             sndr.updateDisplayName();
-                            sender.addChatMessage(new ChatComponentText("Added " + sndr.getColor() + sndr.getUserName() + EnumChatFormatting.RESET + " to " + g.getColor() + g.getName()));
+                            sender.addChatMessage(new TextComponentString("Added " + sndr.getColor() + sndr.getUserName() + TextFormatting.RESET + " to " + g.getColor() + g.getName()));
                         }
                     }
                 } else {
-                    sender.addChatMessage(new ChatComponentText("Usage: /group addUser <groupName> <userName>"));
+                    sender.addChatMessage(new TextComponentString("Usage: /group addUser <groupName> <userName>"));
                 }
-            } else if (var2[0].equals("delUser")) {
-                if (var2.length == 3) {
-                    if (Groups.getGroupByName(var2[1]) == null) {
-                        sender.addChatMessage(new ChatComponentText("This group does not exist"));
+            } else if (args[0].equals("delUser")) {
+                if (args.length == 3) {
+                    if (Groups.getGroupByName(args[1]) == null) {
+                        sender.addChatMessage(new TextComponentString("This group does not exist"));
                     } else {
-                        Group g = Groups.getGroupByName(var2[1]);
-                        User sndr = Users.getUserByName(var2[2]);
+                        Group g = Groups.getGroupByName(args[1]);
+                        User sndr = Users.getUserByName(args[2]);
                         if (sndr.getGroup() != null && sndr.getGroup().equals(g)) {
                             sndr.setGroup(null);
-                            sender.addChatMessage(new ChatComponentText(sndr.getColor() + sndr.getUserName() + EnumChatFormatting.RESET + " is removed from " + g.getColor() + g.getName()));
+                            sender.addChatMessage(new TextComponentString(sndr.getColor() + sndr.getUserName() + TextFormatting.RESET + " is removed from " + g.getColor() + g.getName()));
                             sndr.updateDisplayName();
                         } else {
-                            sender.addChatMessage(new ChatComponentText(sndr.getColor() + sndr.getUserName() + EnumChatFormatting.RESET + " is not in this group"));
+                            sender.addChatMessage(new TextComponentString(sndr.getColor() + sndr.getUserName() + TextFormatting.RESET + " is not in this group"));
                         }
                     }
                 } else {
-                    sender.addChatMessage(new ChatComponentText("Usage: /group delUser <groupName> <userName>"));
+                    sender.addChatMessage(new TextComponentString("Usage: /group delUser <groupName> <userName>"));
                 }
-            } else if (var2[0].equals("color")) {
-                if (var2.length == 3) {
-                    if (Groups.getGroupByName(var2[1]) == null) {
-                        sender.addChatMessage(new ChatComponentText("This group does not exist"));
+            } else if (args[0].equals("color")) {
+                if (args.length == 3) {
+                    if (Groups.getGroupByName(args[1]) == null) {
+                        sender.addChatMessage(new TextComponentString("This group does not exist"));
                     } else {
-                        String clr = var2[2].toLowerCase();
-                        Group g = Groups.getGroupByName(var2[1]);
+                        String clr = args[2].toLowerCase();
+                        Group g = Groups.getGroupByName(args[1]);
                         if (clr.equals("help")) {
                             CommandColor.printColors(sender);
                         } else if (clr.equals("random")) {
                             g.setColor(Colours.getRandomColour());
                             g.updateUsers();
-                            sender.addChatMessage(new ChatComponentText("The group color has now been set to " + g.getColor()));
+                            sender.addChatMessage(new TextComponentString("The group color has now been set to " + g.getColor()));
 
                         } else if (Colours.get(clr) != null) {
                             if (CCConfig.INSTANCE.isColorBlackListed(clr)) {
-                                sender.addChatMessage(new ChatComponentText(Colours.get("red") + "This color has been blacklisted. Try " +
-                                                                            "another color!"));
+                                sender.addChatMessage(new TextComponentString(Colours.get("red") + "This color has been blacklisted. Try " +
+                                        "another color!"));
                             } else {
                                 g.setColor(Colours.get(clr));
                                 g.updateUsers();
-                                sender.addChatMessage(new ChatComponentText("The group color has now been set to " + Colours.get(clr) + clr));
+                                sender.addChatMessage(new TextComponentString("The group color has now been set to " + Colours.get(clr) + clr));
                             }
                         } else {
-                            sender.addChatMessage(new ChatComponentText("Valid Colours are: " + Colours.getColourList()));
+                            sender.addChatMessage(new TextComponentString("Valid Colours are: " + Colours.getColourList()));
                         }
                     }
                 }
-            } else if (var2[0].equals("list")) {
-                sender.addChatMessage(new ChatComponentText(Groups.getGroupNames()));
+            } else if (args[0].equals("list")) {
+                sender.addChatMessage(new TextComponentString(Groups.getGroupNames()));
             }
         }
     }

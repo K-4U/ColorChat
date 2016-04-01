@@ -1,14 +1,14 @@
 package k4unl.minecraft.colorchat.lib;
 
 import k4unl.minecraft.colorchat.lib.config.CCConfig;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.TextFormatting;
 
 public class Group {
 
-    private String             groupName;
-    private EnumChatFormatting groupColor;
+    private String         groupName;
+    private TextFormatting groupColor;
 
-    public Group(String _groupName, EnumChatFormatting _groupColor) {
+    public Group(String _groupName, TextFormatting _groupColor) {
 
         groupName = _groupName;
         groupColor = _groupColor;
@@ -25,12 +25,12 @@ public class Group {
         return groupName;
     }
 
-    public EnumChatFormatting getColor() {
+    public TextFormatting getColor() {
 
         return groupColor;
     }
 
-    public void setColor(EnumChatFormatting newColor) {
+    public void setColor(TextFormatting newColor) {
 
         groupColor = newColor;
     }

@@ -2,7 +2,7 @@ package k4unl.minecraft.colorchat.lib;
 
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.TextFormatting;
 
 import java.io.*;
 import java.lang.reflect.Type;
@@ -47,7 +47,7 @@ public class Groups {
         }
     }
 
-    public static boolean setGroupColor(String name, EnumChatFormatting newColor) {
+    public static boolean setGroupColor(String name, TextFormatting newColor) {
 
         Group g = getGroupByName(name);
         if (g == null) {

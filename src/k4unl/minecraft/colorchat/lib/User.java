@@ -3,20 +3,17 @@ package k4unl.minecraft.colorchat.lib;
 import k4unl.minecraft.colorchat.lib.config.CCConfig;
 import k4unl.minecraft.k4lib.lib.Functions;
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.EnumChatFormatting;
-
-import java.util.List;
+import net.minecraft.util.text.TextFormatting;
 
 public class User {
 
-    private EnumChatFormatting userColor;
-    private String             nick;
-    private String             realUserName;
-    private boolean            hasNick;
-    private Group              group;
+    private TextFormatting userColor;
+    private String         nick;
+    private String         realUserName;
+    private boolean        hasNick;
+    private Group          group;
 
-    public User(String _username, EnumChatFormatting _userColor, String _nick) {
+    public User(String _username, TextFormatting _userColor, String _nick) {
 
         realUserName = _username;
         userColor = _userColor;
@@ -43,7 +40,7 @@ public class User {
         }
     }
 
-    public EnumChatFormatting getColor() {
+    public TextFormatting getColor() {
 
         return userColor;
     }
@@ -59,7 +56,7 @@ public class User {
         hasNick = false;
     }
 
-    public void setUserColor(EnumChatFormatting newColor) {
+    public void setUserColor(TextFormatting newColor) {
 
         userColor = newColor;
     }
@@ -81,7 +78,7 @@ public class User {
 
     public EntityPlayer getPlayerEntity() {
 
-        for (EntityPlayer player : (List<EntityPlayer>) MinecraftServer.getServer().getEntityWorld().playerEntities) {
+        for (EntityPlayer player : Functions.getServer().getPlayerList().getPlayerList()) {
             if (player.getGameProfile().getName().equals(this.getUserName())) {
                 return player;
             }
@@ -97,6 +94,7 @@ public class User {
     }
 
     public boolean isOpped() {
+
         return Functions.isPlayerOpped(realUserName);
     }
 }

@@ -1,7 +1,7 @@
 package k4unl.minecraft.colorchat.lib;
 
 import k4unl.minecraft.colorchat.lib.config.CCConfig;
-import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.text.TextFormatting;
 
 import java.util.*;
 
@@ -10,28 +10,28 @@ import java.util.*;
  */
 public class Colours {
 
-    private static Map<String, EnumChatFormatting> colors = new HashMap<String, EnumChatFormatting>();
+    private static Map<String, TextFormatting> colors = new HashMap<String, TextFormatting>();
 
     static {
-        colors.put("black", EnumChatFormatting.BLACK);
-        colors.put("darkblue", EnumChatFormatting.DARK_BLUE);
-        colors.put("darkgreen", EnumChatFormatting.DARK_GREEN);
-        colors.put("darkaqua", EnumChatFormatting.DARK_AQUA);
-        colors.put("darkred", EnumChatFormatting.DARK_RED);
-        colors.put("darkpurple", EnumChatFormatting.DARK_PURPLE);
-        colors.put("gold", EnumChatFormatting.GOLD);
-        colors.put("gray", EnumChatFormatting.GRAY);
-        colors.put("darkgray", EnumChatFormatting.DARK_GRAY);
-        colors.put("blue", EnumChatFormatting.BLUE);
-        colors.put("green", EnumChatFormatting.GREEN);
-        colors.put("aqua", EnumChatFormatting.AQUA);
-        colors.put("red", EnumChatFormatting.RED);
-        colors.put("lightpurple", EnumChatFormatting.LIGHT_PURPLE);
-        colors.put("yellow", EnumChatFormatting.YELLOW);
-        colors.put("white", EnumChatFormatting.WHITE);
+        colors.put("black", TextFormatting.BLACK);
+        colors.put("darkblue", TextFormatting.DARK_BLUE);
+        colors.put("darkgreen", TextFormatting.DARK_GREEN);
+        colors.put("darkaqua", TextFormatting.DARK_AQUA);
+        colors.put("darkred", TextFormatting.DARK_RED);
+        colors.put("darkpurple", TextFormatting.DARK_PURPLE);
+        colors.put("gold", TextFormatting.GOLD);
+        colors.put("gray", TextFormatting.GRAY);
+        colors.put("darkgray", TextFormatting.DARK_GRAY);
+        colors.put("blue", TextFormatting.BLUE);
+        colors.put("green", TextFormatting.GREEN);
+        colors.put("aqua", TextFormatting.AQUA);
+        colors.put("red", TextFormatting.RED);
+        colors.put("lightpurple", TextFormatting.LIGHT_PURPLE);
+        colors.put("yellow", TextFormatting.YELLOW);
+        colors.put("white", TextFormatting.WHITE);
     }
 
-    public static EnumChatFormatting getRandomColour() {
+    public static TextFormatting getRandomColour() {
 
         List<String> keysAsArray = new ArrayList<String>(colors.keySet());
         String newClr = keysAsArray.get(new Random().nextInt(keysAsArray.size()));
@@ -41,7 +41,7 @@ public class Colours {
         return colors.get(newClr);
     }
 
-    public static EnumChatFormatting get(String colour) {
+    public static TextFormatting get(String colour) {
 
         return colors.get(colour);
     }
