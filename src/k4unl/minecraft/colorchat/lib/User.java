@@ -95,6 +95,6 @@ public class User {
 
     public boolean isOpped() {
 
-        return Functions.isPlayerOpped(realUserName);
+        return Functions.isPlayerOpped(getPlayerEntity().getGameProfile());
     }
 }
