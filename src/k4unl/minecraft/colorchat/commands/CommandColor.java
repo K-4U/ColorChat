@@ -105,4 +105,15 @@ public class CommandColor extends CommandK4Base {
             sender.addChatMessage(new TextComponentString("This command is disabled on this server."));
         }
     }
+
+    @Override
+    public boolean checkPermission(MinecraftServer server, ICommandSender sender) {
+
+        User sndr = Users.getUserByName(sender.getName());
+
+        boolean isOp = sndr.isOpped();
+        int mode = CCConfig.INSTANCE.getInt("mode");
+
+        return (mode == 1 || mode == 2 || (mode == 3 && isOp));
+    }
 }

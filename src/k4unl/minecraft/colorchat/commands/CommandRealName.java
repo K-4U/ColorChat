@@ -41,4 +41,10 @@ public class CommandRealName extends CommandK4Base {
             }
         }
     }
+
+    @Override
+    public boolean checkPermission(MinecraftServer server, ICommandSender sender) {
+
+        return true;
+    }
 }
