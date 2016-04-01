@@ -23,7 +23,7 @@ repositories {
 apply plugin: 'net.minecraftforge.gradle.forge'
 
 dependencies {
-    compile "k4unl:k4lib:1.9-1.0.2:deobf"
+    compile "k4unl:k4lib:1.9-1.0.3:deobf"
 }
 
 project.ext {
