@@ -7,7 +7,7 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.1-SNAPSHOT'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
     }
 }
 
@@ -23,12 +23,12 @@ repositories {
 apply plugin: 'net.minecraftforge.gradle.forge'
 
 dependencies {
-    compile "k4unl:k4lib:1.9-1.0.4:deobf"
+    compile "k4unl:k4lib:1.9.4-1.0.5:deobf"
 }
 
 project.ext {
     buildNum = System.getenv("BUILD_NUMBER")
-    mcVersion="1.9"
+    mcVersion="1.9.4"
 }
 
 version = project.ext.mcVersion + "-1.0." + project.ext.buildNum
@@ -42,12 +42,13 @@ allprojects {
 }
 
 minecraft {
-    version = "${project.ext.mcVersion}-12.16.0.1816-1.9"
+    version = "${project.ext.mcVersion}-12.17.0.1910-1.9.4"
     replace "@VERSION@", project.version
     replace "@BUILDNUM@", project.ext.buildNum
 
-    mappings = "snapshot_20160331"
-    runDir = "../Minecraft"
+    mappings = "snapshot_20160521"
+
+    runDir = "../Minecraft/"
 }
 
 // configure the source folders
