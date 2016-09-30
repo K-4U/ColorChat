@@ -23,12 +23,12 @@ repositories {
 apply plugin: 'net.minecraftforge.gradle.forge'
 
 dependencies {
-    compile "k4unl:k4lib:1.10-1.0.58:deobf"
+    compile "k4unl:k4lib:1.10.2-1.0.59:deobf"
 }
 
 project.ext {
     buildNum = System.getenv("BUILD_NUMBER")
-    mcVersion="1.10"
+    mcVersion="1.10.2"
 }
 
 version = project.ext.mcVersion + "-1.0." + project.ext.buildNum
@@ -42,11 +42,11 @@ allprojects {
 }
 
 minecraft {
-    version = "${project.ext.mcVersion}-12.18.0.1981-1.10.0"
+    version = "${project.ext.mcVersion}-12.18.1.2094"
     replace "@VERSION@", project.version
     replace "@BUILDNUM@", project.ext.buildNum
 
-    mappings = "snapshot_20160623"
+    mappings = "snapshot_20160930"
 
     runDir = "../Minecraft/"
 }
