@@ -108,11 +108,16 @@ public class CommandColor extends CommandK4Base {
 
     @Override
     public boolean checkPermission(MinecraftServer server, ICommandSender sender) {
-
+    
+        int mode = CCConfig.INSTANCE.getInt("mode");
+        if(sender == null) {
+            
+            return (mode == 1 || mode == 2);
+        }
         User sndr = Users.getUserByName(sender.getName());
 
         boolean isOp = sndr.isOpped();
-        int mode = CCConfig.INSTANCE.getInt("mode");
+        
 
         return (mode == 1 || mode == 2 || (mode == 3 && isOp));
     }
