@@ -34,12 +34,12 @@ public class CommandNick extends CommandK4Base {
 	}
 	
 	@Override
-	public String getCommandName() {
+	public String getName() {
 		return "nick";
 	}
 
 	@Override
-	public String getCommandUsage(ICommandSender sender) {
+	public String getUsage(ICommandSender sender) {
         if(CCConfig.INSTANCE.getBool("nickChangeOPOnly")){
             return "/nick <target> <nick>. Leave nick empty to reset";
         }else{
@@ -53,7 +53,7 @@ public class CommandNick extends CommandK4Base {
         String nickToSet;
         if(CCConfig.INSTANCE.getBool("nickChangeOPOnly")){
             if(args.length == 0){
-                sender.addChatMessage(new TextComponentString("Please specify a target"));
+                sender.sendMessage(new TextComponentString("Please specify a target"));
                 return;
             }
             target = Users.getUserByName(args[0]);
@@ -76,12 +76,12 @@ public class CommandNick extends CommandK4Base {
             }
             target.resetNick();
             target.updateDisplayName();
-			sender.addChatMessage(new TextComponentString("Nick is reset!"));
+			sender.sendMessage(new TextComponentString("Nick is reset!"));
 		}else{
             nickToSet = nickToSet.replace("[", "").replace("]", "");
             if(CCConfig.INSTANCE.isNickBlackListed(nickToSet)){
                 Log.error(target.getUserName() + " tried to set a banned nick (" + nickToSet + ")");
-                sender.addChatMessage(new TextComponentString(TextFormatting.RED + "This nick is banned! You have been reported!"));
+                sender.sendMessage(new TextComponentString(TextFormatting.RED + "This nick is banned! You have been reported!"));
                 return;
             }
             if(nickToSet.length() >= CCConfig.INSTANCE.getInt("minimumNickLength") && nickToSet.length() <= CCConfig.INSTANCE.getInt("maximumNickLength")){
@@ -91,12 +91,12 @@ public class CommandNick extends CommandK4Base {
                 }
                 target.setNick(nickToSet);
                 target.updateDisplayName();
-                sender.addChatMessage(new TextComponentString("Nick is set to " + nickToSet));
+                sender.sendMessage(new TextComponentString("Nick is set to " + nickToSet));
                 if(CCConfig.INSTANCE.getBool("changeDisplayName")) {
                     ((EntityPlayerMP) sender).refreshDisplayName();
                 }
             }else{
-                sender.addChatMessage(new TextComponentString("Your nick should be between " + CCConfig.INSTANCE.getInt("minimumNickLength") + " and " + CCConfig.INSTANCE.getInt("maximumNickLength") + " characters long."));
+                sender.sendMessage(new TextComponentString("Your nick should be between " + CCConfig.INSTANCE.getInt("minimumNickLength") + " and " + CCConfig.INSTANCE.getInt("maximumNickLength") + " characters long."));
             }
 		}
 	}

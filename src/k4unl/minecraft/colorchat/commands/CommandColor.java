@@ -21,20 +21,20 @@ public class CommandColor extends CommandK4Base {
     }
 
     @Override
-    public String getCommandName() {
+    public String getName() {
 
         return "color";
     }
 
     @Override
-    public String getCommandUsage(ICommandSender sender) {
+    public String getUsage(ICommandSender sender) {
 
         return "/color " + Colours.getColourList();
     }
 
     public static void printColors(ICommandSender sender) {
 
-        sender.addChatMessage(new TextComponentString("Available colors are " + Colours.getColourList()));
+        sender.sendMessage(new TextComponentString("Available colors are " + Colours.getColourList()));
     }
 
     @Override
@@ -54,7 +54,7 @@ public class CommandColor extends CommandK4Base {
                     printColors(sender);
                 } else if (clr.equals("random")) {
                     sndr.setUserColor(Colours.getRandomColour());
-                    sender.addChatMessage(new TextComponentString("Your color has now been set to " + sndr.getColor()));
+                    sender.sendMessage(new TextComponentString("Your color has now been set to " + sndr.getColor() + sndr.getColor().getFriendlyName()));
                     if (CCConfig.INSTANCE.getBool("changeDisplayName")) {
                         if (sender instanceof EntityPlayer) {
                             ((EntityPlayer) sender).refreshDisplayName();
@@ -62,10 +62,10 @@ public class CommandColor extends CommandK4Base {
                     }
                 } else if (Colours.get(clr) != null) {
                     if (CCConfig.INSTANCE.isColorBlackListed(clr)) {
-                        sender.addChatMessage(new TextComponentString(Colours.get("red") + "This color has been blacklisted. Try another color!"));
+                        sender.sendMessage(new TextComponentString(Colours.get("red") + "This color has been blacklisted. Try another color!"));
                     } else {
                         sndr.setUserColor(Colours.get(clr));
-                        sender.addChatMessage(new TextComponentString("Your color has now been set to " + sndr.getColor()));
+                        sender.sendMessage(new TextComponentString("Your color has now been set to " + sndr.getColor() + sndr.getColor().getFriendlyName()));
                         if (CCConfig.INSTANCE.getBool("changeDisplayName")) {
                             if (sender instanceof EntityPlayer) {
                                 ((EntityPlayer) sender).refreshDisplayName();
@@ -82,10 +82,10 @@ public class CommandColor extends CommandK4Base {
                         if (Colours.get(args[1]) != null) {
                             if (CCConfig.INSTANCE.isColorBlackListed(args[1])) {
                                 Users.getUserByName(args[0]).setUserColor(Colours.get(args[1]));
-                                sender.addChatMessage(new TextComponentString("Color for " + args[0] + " has been set to " + args[1]));
+                                sender.sendMessage(new TextComponentString("Color for " + args[0] + " has been set to " + args[1]));
                                 if (CCConfig.INSTANCE.getBool("changeDisplayName")) {
                                     EntityPlayerMP target = null;
-                                    for (EntityPlayerMP player : server.getPlayerList().getPlayerList()) {
+                                    for (EntityPlayerMP player : server.getPlayerList().getPlayers()) {
                                         if(player.getName().equalsIgnoreCase(args[0])) {
                                             target = player;
                                         }
@@ -95,14 +95,14 @@ public class CommandColor extends CommandK4Base {
                                     }
                                 }
                             } else {
-                                sender.addChatMessage(new TextComponentString(Colours.get("red") + "This color has been blacklisted. Try another color!"));
+                                sender.sendMessage(new TextComponentString(Colours.get("red") + "This color has been blacklisted. Try another color!"));
                             }
                         }
                     }
                 }
             }
         } else {
-            sender.addChatMessage(new TextComponentString("This command is disabled on this server."));
+            sender.sendMessage(new TextComponentString("This command is disabled on this server."));
         }
     }
 

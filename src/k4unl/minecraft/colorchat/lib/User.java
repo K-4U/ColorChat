@@ -11,7 +11,7 @@ public class User {
     private String         nick;
     private String         realUserName;
     private boolean        hasNick;
-    private Group          group;
+    private String         group;
     
     public User(String _username, TextFormatting _userColor, String _nick) {
         
@@ -68,17 +68,17 @@ public class User {
     
     public Group getGroup() {
         
-        return group;
+        return Groups.getGroupByName(group);
     }
     
     public void setGroup(Group newGroup) {
         
-        group = newGroup;
+        group = newGroup.getName();
     }
     
     public EntityPlayer getPlayerEntity() {
         
-        for (EntityPlayer player : Functions.getServer().getPlayerList().getPlayerList()) {
+        for (EntityPlayer player : Functions.getServer().getPlayerList().getPlayers()) {
             if (player.getGameProfile().getName().equals(this.getUserName())) {
                 return player;
             }
