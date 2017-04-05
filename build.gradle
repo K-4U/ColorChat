@@ -31,7 +31,7 @@ dependencies {
     compile "k4unl:k4lib:${project.ext.mcVersion}-2.1.69:universal"
 }
 
-version = project.ext.mcVersion + "-1.0." + project.ext.buildNum
+version = project.ext.mcVersion + "-2.0." + project.ext.buildNum
 group= "k4unl.minecraft.colorChat" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "colorchat"
 
