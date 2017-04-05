@@ -28,7 +28,7 @@ project.ext {
 }
 
 dependencies {
-    compile "k4unl:k4lib:${project.ext.mcVersion}-2.1.69:universal"
+    deobfCompile "k4unl:k4lib:${project.ext.mcVersion}-2.1.70:universal"
 }
 
 version = project.ext.mcVersion + "-2.0." + project.ext.buildNum
