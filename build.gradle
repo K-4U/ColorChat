@@ -7,15 +7,15 @@ buildscript {
         }
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.2-SNAPSHOT'
+        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
     }
 }
 
 
 repositories {
     maven {
-        name "K4Repo"
-        url "http://maven.k-4u.nl"
+        name "ModMaven"
+        url "https://modmaven.k-4u.nl"
     }
 }
 
@@ -24,11 +24,11 @@ apply plugin: 'net.minecraftforge.gradle.forge'
 
 project.ext {
     buildNum = System.getenv("BUILD_NUMBER")
-    mcVersion="1.11.2"
+    mcVersion="1.12.1"
 }
 
 dependencies {
-    deobfCompile "k4unl:k4lib:${project.ext.mcVersion}-2.1.70:universal"
+    deobfCompile "k4unl:k4lib:${project.ext.mcVersion}-2.1.79:universal"
 }
 
 version = project.ext.mcVersion + "-2.0." + project.ext.buildNum
@@ -42,11 +42,11 @@ allprojects {
 }
 
 minecraft {
-    version = "${project.ext.mcVersion}-13.20.0.2263"
+    version = "${project.ext.mcVersion}-14.22.0.2452"
     replace "@VERSION@", project.version
     replace "@BUILDNUM@", project.ext.buildNum
 
-    mappings = "snapshot_20170405"
+    mappings = "snapshot_20170810"
 
     runDir = "../Minecraft/"
 }
