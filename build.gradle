@@ -157,7 +157,7 @@ dependencies {
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
 
-    if (project(':K4Lib') != null) {
+    if (findProject(':K4Lib') != null) {
         compile project(':K4Lib')
     } else {
         compile fg.deobf(project.dependencies.create("k4unl:k4lib:${k4lib_version}") {
