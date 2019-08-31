@@ -1,17 +1,17 @@
 buildscript {
     repositories {
+        maven { url = 'https://files.minecraftforge.net/maven' }
         jcenter()
-        maven {
-            name = "forge"
-            url = "http://files.minecraftforge.net/maven"
-        }
+        mavenCentral()
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
     }
 }
-
-
+apply plugin: 'net.minecraftforge.gradle'
+// Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
+apply plugin: 'idea'
+apply plugin: 'maven-publish'
 repositories {
     maven {
         name "ModMaven"
@@ -19,20 +19,13 @@ repositories {
     }
 }
 
-
-apply plugin: 'net.minecraftforge.gradle.forge'
-
 project.ext {
     buildNum = System.getenv("BUILD_NUMBER")
-    mcVersion="1.12.1"
+    mcVersion = "1.14.4"
 }
 
-dependencies {
-    deobfCompile "k4unl:k4lib:${project.ext.mcVersion}-2.1.79:universal"
-}
-
-version = project.ext.mcVersion + "-2.0." + project.ext.buildNum
-group= "k4unl.minecraft.colorChat" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
+version = project.ext.mcVersion + "-3.0." + project.ext.buildNum
+group = "k4unl.minecraft.colorChat" // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = "colorchat"
 
 allprojects {
@@ -42,52 +35,135 @@ allprojects {
 }
 
 minecraft {
-    version = "${project.ext.mcVersion}-14.22.0.2452"
-    replace "@VERSION@", project.version
-    replace "@BUILDNUM@", project.ext.buildNum
+    // The mappings can be changed at any time, and must be in the following format.
+    // snapshot_YYYYMMDD   Snapshot are built nightly.
+    // stable_#            Stables are built at the discretion of the MCP team.
+    // Use non-default mappings at your own risk. they may not always work.
+    // Simply re-run your setup task after changing the mappings to update your workspace.
+    mappings channel: 'snapshot', version: '20190831-1.14.3'
+    // makeObfSourceJar = false // an Srg named sources jar is made by default. uncomment this to disable.
 
-    mappings = "snapshot_20170810"
+    // accessTransformer = file('src/main/resources/META-INF/accesstransformer.cfg')
 
-    runDir = "../Minecraft/"
-}
+    // Default run configurations.
+    // These can be tweaked, removed, or duplicated as needed.
+    runs {
+        client {
+            workingDirectory project.file('run')
 
-// configure the source folders
-sourceSets {
-    main {
-        java {
-            srcDir 'src'
-            // exclude 'some exclusion'
-            // include 'some inclusion'
+            // Recommended logging data for a userdev environment
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+
+            // Recommended logging level for the console
+            property 'forge.logging.console.level', 'debug'
+
+            mods {
+                Colorchat {
+                    source sourceSets.main
+                }
+            }
         }
-        resources {
-            srcDir 'resources'
-            exclude '**/.md' // exclude readme from localization repo
-            // exclude 'some exclusion'
-            // include 'some inclusion'
+
+        server {
+            workingDirectory project.file('run')
+
+            // Recommended logging data for a userdev environment
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+
+            // Recommended logging level for the console
+            property 'forge.logging.console.level', 'debug'
+
+            mods {
+                Colorchat {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        data {
+            workingDirectory project.file('run')
+
+            // Recommended logging data for a userdev environment
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+
+            // Recommended logging level for the console
+            property 'forge.logging.console.level', 'debug'
+
+            args '--mod', 'colorchat', '--all', '--output', file('src/generated/resources/')
+
+            mods {
+                colorchat {
+                    source sourceSets.main
+                }
+            }
         }
     }
 }
+/*
+processResources {
+    // this will ensure that this task is redone when the versions change.
+    inputs.property "version", project.version
 
-processResources
-        {
-            // this will ensure that this task is redone when the versions change.
-            inputs.property "version", project.version
-            inputs.property "mcversion", project.minecraft.version
+    // replace stuff in mcmod.info, nothing else
+    from(sourceSets.main.resources.srcDirs) {
+        //include 'mcmod.info'
 
-            // replace stuff in mcmod.info, nothing else
-            from(sourceSets.main.resources.srcDirs) {
-                //include 'mcmod.info'
+        // replace version and mcversion
+        expand 'version': project.version
+    }
 
-                // replace version and mcversion
-                expand 'version':project.version, 'mcversion':project.minecraft.version
-            }
-
-            // copy everything else, thats not the mcmod.info
-            from(sourceSets.main.resources.srcDirs) {
-                exclude 'mcmod.info'
-            }
-        }
+    // copy everything else, thats not the mcmod.info
+    from(sourceSets.main.resources.srcDirs) {
+        exclude 'mcmod.info'
+    }
+}*/
 
 jar {
-    classifier = "universal"
+    manifest {
+        attributes([
+                "Specification-Title"     : archivesBaseName,
+                "Specification-Vendor"    : group,
+                "Specification-Version"   : version,
+                "Implementation-Title"    : project.name,
+                "Implementation-Version"  : "${version}",
+                "Implementation-Vendor"   : group,
+                "Implementation-Timestamp": new Date().format("yyyy-MM-dd'T'HH:mm:ssZ")
+        ])
+    }
 }
+
+
+dependencies {
+    // Specify the version of Minecraft to use, If this is any group other then 'net.minecraft' it is assumed
+    // that the dep is a ForgeGradle 'patcher' dependency. And it's patches will be applied.
+    // The userdev artifact is a special name and will get all sorts of transformations applied to it.
+    minecraft 'net.minecraftforge:forge:1.14.4-28.0.75'
+
+    // You may put jars on which you depend on in ./libs or you may define them like so..
+    // compile "some.group:artifact:version:classifier"
+    // compile "some.group:artifact:version"
+
+    // Real examples
+    // compile 'com.mod-buildcraft:buildcraft:6.0.8:dev'  // adds buildcraft to the dev env
+    // compile 'com.googlecode.efficient-java-matrix-library:ejml:0.24' // adds ejml to the dev env
+
+    // The 'provided' configuration is for optional dependencies that exist at compile-time but might not at runtime.
+    // provided 'com.mod-buildcraft:buildcraft:6.0.8:dev'
+
+    // These dependencies get remapped to your current MCP mappings
+    // deobf 'com.mod-buildcraft:buildcraft:6.0.8:dev'
+
+    // For more info...
+    // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
+    // http://www.gradle.org/docs/current/userguide/dependency_management.html
+
+    if (project(':K4Lib') != null) {
+        compile project(':K4Lib')
+    } else {
+        compile fg.deobf(project.dependencies.create("k4unl:k4lib:${k4lib_version}") {
+            transitive = false
+        })
+    }
+
+}
+
