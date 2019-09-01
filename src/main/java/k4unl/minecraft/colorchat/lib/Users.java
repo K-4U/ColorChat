@@ -66,4 +66,12 @@ public class Users {
 	public static List<User> getUsers() {
 		return userList;
 	}
+
+	public static List<String> getNickNames() {
+		List<String> ret = new ArrayList<>();
+		for (User user : userList) {
+			ret.add(user.getNick());
+		}
+		return ret;
+	}
 }

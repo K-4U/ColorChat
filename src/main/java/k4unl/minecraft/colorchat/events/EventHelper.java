@@ -68,7 +68,7 @@ public class EventHelper {
 	public void getDisplayNameEvent(PlayerEvent.NameFormat event) {
 
 		if (CCConfig.changeDisplayName.get()) {
-			User usr = Users.getUserByName(event.getEntityPlayer().getGameProfile().getName());
+			User usr = Users.getUserByName(event.getEntityPlayer().getName().getUnformattedComponentText());
 			String displayName = "";
 			if (usr.getGroup() != null) {
 				displayName += usr.getGroup().getColor() + "[" + usr.getGroup().getName() + "]";

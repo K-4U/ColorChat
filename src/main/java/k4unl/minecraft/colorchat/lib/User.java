@@ -92,8 +92,11 @@ public class User {
 	}
 
 	public void setGroup(Group newGroup) {
-
-		group = newGroup.getName();
+		if (null != newGroup) {
+			group = newGroup.getName();
+		} else {
+			group = null;
+		}
 	}
 
 	public PlayerEntity getPlayerEntity() {

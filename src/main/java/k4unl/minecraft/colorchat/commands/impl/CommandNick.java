@@ -34,7 +34,7 @@ public class CommandNick implements Command {
 
 	private int setOtherNick(CommandContext<CommandSource> context) throws CommandSyntaxException {
 		ServerPlayerEntity targetPlayerEntity = EntityArgument.getPlayer(context, "target");
-		User target = Users.getUserByName(targetPlayerEntity.getName().getString());
+		User target = Users.getUserByName(targetPlayerEntity.getName().getUnformattedComponentText());
 		String nickToSet = StringArgumentType.getString(context, "nickToSet");
 		nickToSet = nickToSet.replace("[", "").replace("]", "");
 		if (CCConfig.isNickBlackListed(nickToSet)) {
@@ -59,7 +59,7 @@ public class CommandNick implements Command {
 
 	private int resetOtherNick(CommandContext<CommandSource> context) throws CommandSyntaxException {
 		ServerPlayerEntity targetPlayerEntity = EntityArgument.getPlayer(context, "target");
-		User target = Users.getUserByName(targetPlayerEntity.getName().getString());
+		User target = Users.getUserByName(targetPlayerEntity.getName().getUnformattedComponentText());
 		if (CCConfig.announceNickChanges.get()) {
 			Functions.sendChatMessageServerWide(new StringTextComponent(TextFormatting.GOLD + target.getNick() + "(" + target.getUserName() + ") is now called " + target.getUserName()));
 		}
@@ -71,7 +71,7 @@ public class CommandNick implements Command {
 	}
 
 	private int setOwnNick(CommandContext<CommandSource> context) {
-		User target = Users.getUserByName(context.getSource().getName());
+		User target = Users.getUserByName(context.getSource().getEntity().getName().getUnformattedComponentText());
 		String nickToSet = StringArgumentType.getString(context, "nickToSet");
 		nickToSet = nickToSet.replace("[", "").replace("]", "");
 		if (CCConfig.isNickBlackListed(nickToSet)) {
@@ -94,7 +94,7 @@ public class CommandNick implements Command {
 	}
 
 	private int resetOwnNick(CommandContext<CommandSource> context) {
-		User target = Users.getUserByName(context.getSource().getName());
+		User target = Users.getUserByName(context.getSource().getEntity().getName().getUnformattedComponentText());
 		if (CCConfig.announceNickChanges.get()) {
 			Functions.sendChatMessageServerWide(new StringTextComponent(TextFormatting.GOLD + target.getNick() + "(" + target.getUserName() + ") is now called " + target.getUserName()));
 		}

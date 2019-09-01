@@ -1,129 +1,120 @@
 package k4unl.minecraft.colorchat.commands.impl;
 
-public class CommandGroup { // extends CommandOpOnly {
-/*
-    public CommandGroup() {
+import org.apache.commons.lang3.StringUtils;
 
-        aliases.add("gr");
-    }
+import com.mojang.brigadier.arguments.StringArgumentType;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import com.mojang.brigadier.context.CommandContext;
+import com.mojang.brigadier.exceptions.CommandSyntaxException;
 
-    @Override
-    public String getName() {
+import k4unl.minecraft.colorchat.commands.arguments.GroupArgument;
+import k4unl.minecraft.colorchat.lib.Colours;
+import k4unl.minecraft.colorchat.lib.Group;
+import k4unl.minecraft.colorchat.lib.Groups;
+import k4unl.minecraft.colorchat.lib.User;
+import k4unl.minecraft.colorchat.lib.Users;
+import k4unl.minecraft.colorchat.lib.config.CCConfig;
+import k4unl.minecraft.k4lib.commands.impl.CommandOpOnly;
+import net.minecraft.command.CommandSource;
+import net.minecraft.command.Commands;
+import net.minecraft.command.arguments.ColorArgument;
+import net.minecraft.command.arguments.EntityArgument;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TextFormatting;
 
-        return "group";
-    }
+public class CommandGroup extends CommandOpOnly {
 
-    @Override
-    public String getUsage(ICommandSender sender) {
+	@Override
+	public void register(LiteralArgumentBuilder<CommandSource> argumentBuilder) {
+		argumentBuilder.then(Commands.literal("list").executes(this::listGroups));
+		argumentBuilder.then(Commands.literal("create").then(Commands.argument("group name", StringArgumentType.word()).executes(this::createGroup)));
+		argumentBuilder.then(Commands.literal("remove").then(Commands.argument("group", GroupArgument.group()).executes(this::removeGroup)));
+		argumentBuilder.then(Commands.literal("addUser").then(Commands.argument("group", GroupArgument.group()).then(Commands.argument("user", EntityArgument.player()).executes(this::addToGroup))));
+		argumentBuilder.then(Commands.literal("delUser").then(Commands.argument("group", GroupArgument.group()).then(Commands.argument("user", EntityArgument.player()).executes(this::removeFromGroup))));
+		argumentBuilder.then(Commands.literal("color")
+				.then(Commands.argument("group", GroupArgument.group())
+						.then(Commands.argument("color", ColorArgument.color()).executes(this::setGroupColor))
+						.then(Commands.literal("random").executes(this::setRandomColor))));
+	}
 
-        return "/group list|create <name>|remove <name>|addUser <group> <name>|delUser <group> <name>|color <group> <color>|save|load";
-    }
+	private int setRandomColor(CommandContext<CommandSource> context) {
+		Group g = GroupArgument.getGroup(context, "group");
+		g.setColor(Colours.getRandomColour());
+		g.updateUsers();
+		context.getSource().sendFeedback(new StringTextComponent("The color of group " + g.getName() + " has now been set to " + g.getColor() + g.getColor().getFriendlyName()), false);
+		return 0;
+	}
 
-    @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
+	private int setGroupColor(CommandContext<CommandSource> context) {
+		Group g = GroupArgument.getGroup(context, "group");
+		TextFormatting color = ColorArgument.getColor(context, "color");
+		if (CCConfig.isColorBlackListed(color.getFriendlyName())) {
+			context.getSource().sendFeedback(new StringTextComponent(Colours.get("red") + "This color has been blacklisted. Try another color!"), false);
+		} else {
+			g.setColor(color);
+			g.updateUsers();
+			context.getSource().sendFeedback(new StringTextComponent("The color of group " + g.getName() + " has now been set to " + g.getColor() + g.getColor().getFriendlyName()), false);
+		}
+		return 0;
+	}
 
-        if (args.length == 0) {
-            sender.sendMessage(new StringTextComponent("Usage: " + getUsage(sender)));
-        } else {
-            if (args[0].equals("create")) {
-                if (args.length == 2) {
-                    if (Groups.getGroupByName(args[1]) == null) {
-                        Group g = Groups.createNewGroup(args[1]);
-                        sender.sendMessage(new StringTextComponent("Group " + g.getColor() + args[1] + "" + TextFormatting.RESET + " has been created"));
-                    } else {
-                        sender.sendMessage(new StringTextComponent("This group already exists"));
-                    }
-                } else {
-                    sender.sendMessage(new StringTextComponent("Usage: /group create <name>"));
-                }
-            } else if (args[0].equals("remove")) {
-                if (args.length == 2) {
-                    if (Groups.getGroupByName(args[1]) != null) {
-                        Group g = Groups.getGroupByName(args[1]);
-                        sender.sendMessage(new StringTextComponent("Group " + g.getColor() + args[1] + "" + TextFormatting.RESET + " has been removed"));
-                        g.updateUsers();
-                        Groups.removeGroupByName(args[1]);
-                    } else {
-                        sender.sendMessage(new StringTextComponent("This group doesn't exists"));
-                    }
-                } else {
-                    sender.sendMessage(new StringTextComponent("Usage: /group remove <name>"));
-                }
-            } else if (args[0].equals("save")) {
-                Groups.saveToFile(DimensionManager.getCurrentSaveRootDirectory());
-                sender.sendMessage(new StringTextComponent("Groups saved to file!"));
-            } else if (args[0].equals("load")) {
-                Groups.readFromFile(DimensionManager.getCurrentSaveRootDirectory());
-                sender.sendMessage(new StringTextComponent("Groups loaded from file!"));
-                Groups.updateAll();
-            } else if (args[0].equals("addUser")) {
-                if (args.length == 3) {
-                    if (Groups.getGroupByName(args[1]) == null) {
-                        sender.sendMessage(new StringTextComponent("This group does not exist"));
-                    } else {
-                        Group g = Groups.getGroupByName(args[1]);
-                        User sndr = Users.getUserByName(args[2]);
-                        if (sndr.getGroup() != null && sndr.getGroup().equals(g)) {
-                            sender.sendMessage(new StringTextComponent(sndr.getColor() + sndr.getUserName() + TextFormatting.RESET + " is already in this group."));
-                        } else {
-                            sndr.setGroup(g);
-                            sndr.updateDisplayName();
-                            sender.sendMessage(new StringTextComponent("Added " + sndr.getColor() + sndr.getUserName() + TextFormatting.RESET + " to " + g.getColor() + g.getName()));
-                        }
-                    }
-                } else {
-                    sender.sendMessage(new StringTextComponent("Usage: /group addUser <groupName> <userName>"));
-                }
-            } else if (args[0].equals("delUser")) {
-                if (args.length == 3) {
-                    if (Groups.getGroupByName(args[1]) == null) {
-                        sender.sendMessage(new StringTextComponent("This group does not exist"));
-                    } else {
-                        Group g = Groups.getGroupByName(args[1]);
-                        User sndr = Users.getUserByName(args[2]);
-                        if (sndr.getGroup() != null && sndr.getGroup().equals(g)) {
-                            sndr.setGroup(null);
-                            sender.sendMessage(new StringTextComponent(sndr.getColor() + sndr.getUserName() + TextFormatting.RESET + " is removed from " + g.getColor() + g.getName()));
-                            sndr.updateDisplayName();
-                        } else {
-                            sender.sendMessage(new StringTextComponent(sndr.getColor() + sndr.getUserName() + TextFormatting.RESET + " is not in this group"));
-                        }
-                    }
-                } else {
-                    sender.sendMessage(new StringTextComponent("Usage: /group delUser <groupName> <userName>"));
-                }
-            } else if (args[0].equals("color")) {
-                if (args.length == 3) {
-                    if (Groups.getGroupByName(args[1]) == null) {
-                        sender.sendMessage(new StringTextComponent("This group does not exist"));
-                    } else {
-                        String clr = args[2].toLowerCase();
-                        Group g = Groups.getGroupByName(args[1]);
-                        if (clr.equals("help")) {
-                            CommandColor.printColors(sender);
-                        } else if (clr.equals("random")) {
-                            g.setColor(Colours.getRandomColour());
-                            g.updateUsers();
-                            sender.sendMessage(new StringTextComponent("The group color has now been set to " + g.getColor()));
+	private int removeFromGroup(CommandContext<CommandSource> context) throws CommandSyntaxException {
+		Group g = GroupArgument.getGroup(context, "group");
+		User target = Users.getUserByName(EntityArgument.getPlayer(context, "user").getName().getUnformattedComponentText());
+		if (target.getGroup() != null && target.getGroup().equals(g)) {
+			target.setGroup(null);
+			context.getSource().sendFeedback(new StringTextComponent(target.getColor() + target.getUserName() + TextFormatting.RESET + " is removed from " + g.getColor() + g.getName()), false);
+			target.updateDisplayName();
+		} else {
+			context.getSource().sendFeedback(new StringTextComponent(target.getColor() + target.getUserName() + TextFormatting.RESET + " is not in this group"), false);
+		}
+		return 0;
+	}
 
-                        } else if (Colours.get(clr) != null) {
-                            if (CCConfig.INSTANCE.isColorBlackListed(clr)) {
-                                sender.sendMessage(new StringTextComponent(Colours.get("red") + "This color has been blacklisted. Try " +
-                                        "another color!"));
-                            } else {
-                                g.setColor(Colours.get(clr));
-                                g.updateUsers();
-                                sender.sendMessage(new StringTextComponent("The group color has now been set to " + Colours.get(clr) + clr));
-                            }
-                        } else {
-                            sender.sendMessage(new StringTextComponent("Valid Colours are: " + Colours.getColourList()));
-                        }
-                    }
-                }
-            } else if (args[0].equals("list")) {
-                sender.sendMessage(new StringTextComponent(Groups.getGroupNames()));
-            }
-        }
-    }
- */
+	private int addToGroup(CommandContext<CommandSource> context) throws CommandSyntaxException {
+		Group g = GroupArgument.getGroup(context, "group");
+		User target = Users.getUserByName(EntityArgument.getPlayer(context, "user").getName().getUnformattedComponentText());
+		if (target.getGroup() != null && target.getGroup().equals(g)) {
+			context.getSource().sendFeedback(new StringTextComponent(target.getColor() + target.getUserName() + TextFormatting.RESET + " is already in this group."), false);
+		} else {
+			target.setGroup(g);
+			target.updateDisplayName();
+			context.getSource().sendFeedback(new StringTextComponent("Added " + target.getColor() + target.getUserName() + TextFormatting.RESET + " to " + g.getColor() + g.getName()), false);
+		}
+		return 0;
+	}
+
+	private int removeGroup(CommandContext<CommandSource> context) {
+		Group group = GroupArgument.getGroup(context, "group");
+		Groups.removeGroupByName(group.getName());
+		context.getSource().sendFeedback(new StringTextComponent("Group " + group.getColor() + group.getName() + "" + TextFormatting.RESET + " has been removed"), false);
+		return 0;
+	}
+
+	private int createGroup(CommandContext<CommandSource> context) {
+		String groupName = StringArgumentType.getString(context, "group name");
+		if (Groups.getGroupByName(groupName) == null) {
+			Group g = Groups.createNewGroup(groupName);
+			context.getSource().sendFeedback(new StringTextComponent("Group " + g.getColor() + g.getName() + "" + TextFormatting.RESET + " has been created"), false);
+		} else {
+			context.getSource().sendFeedback(new StringTextComponent("This group already exists"), false);
+		}
+		return 0;
+	}
+
+	private int listGroups(CommandContext<CommandSource> context) {
+		String groupNames = StringUtils.join(Groups.getGroupNames(), ",");
+		if (groupNames.isEmpty()) {
+			context.getSource().sendFeedback(new StringTextComponent("No groups defined yet!"), false);
+		} else {
+			context.getSource().sendFeedback(new StringTextComponent(groupNames), false);
+		}
+		return 0;
+	}
+
+	@Override
+	public String getName() {
+
+		return "group";
+	}
 }

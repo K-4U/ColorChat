@@ -1,6 +1,5 @@
 package k4unl.minecraft.colorchat.commands.impl;
 
-import com.mojang.brigadier.arguments.StringArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
@@ -27,7 +26,7 @@ public class CommandColor implements Command {
 		Mode mode = CCConfig.mode.get();
 		if (mode == Mode.RANDOM || mode == Mode.SAVED || mode == Mode.OP) {
 			argumentBuilder.then(Commands.argument("colour", ColorArgument.color()).executes(this::setOwnColor))
-					.then(Commands.argument("random", StringArgumentType.string()).executes(this::setRandomColour));
+					.then(Commands.literal("random").executes(this::setRandomColour));
 		}
 		if (mode == Mode.OP) {
 			argumentBuilder.then(Commands.argument("target", EntityArgument.player()).
@@ -61,7 +60,7 @@ public class CommandColor implements Command {
 	private int setOwnColor(CommandContext<CommandSource> context) {
 		TextFormatting colour = ColorArgument.getColor(context, "colour");
 		Mode mode = CCConfig.mode.get();
-		User sndr = Users.getUserByName(context.getSource().getName());
+		User sndr = Users.getUserByName(context.getSource().getEntity().getName().getUnformattedComponentText());
 
 		boolean isOp = false;
 		if (context.getSource().getEntity() instanceof ServerPlayerEntity) {
@@ -84,7 +83,7 @@ public class CommandColor implements Command {
 
 	private int setRandomColour(CommandContext<CommandSource> context) {
 		Mode mode = CCConfig.mode.get();
-		User sndr = Users.getUserByName(context.getSource().getName());
+		User sndr = Users.getUserByName(context.getSource().getEntity().getName().getUnformattedComponentText());
 
 		boolean isOp = false;
 		if (context.getSource().getEntity() instanceof ServerPlayerEntity) {
@@ -115,7 +114,6 @@ public class CommandColor implements Command {
 
 			return (mode == Mode.RANDOM || mode == Mode.SAVED);
 		}
-		User sndr = Users.getUserByName(commandSource.getName());
 
 		boolean isOp = false;
 		if (commandSource.getEntity() instanceof ServerPlayerEntity) {

@@ -1,43 +1,34 @@
 package k4unl.minecraft.colorchat.commands.impl;
 
-public class CommandRealName { //extends CommandK4Base {
-    /*
-    public CommandRealName() {
-        
-        aliases.add("rn");
-    }
-    
-    @Override
-    public String getName() {
-        
-        return "realname";
-    }
-    
-    @Override
-    public String getUsage(ICommandSender sender) {
-        
-        return "/realname <nick>";
-    }
-    
-    @Override
-    public void execute(MinecraftServer server, ICommandSender sender, String[] args) throws CommandException {
-        
-        if (args.length == 0) {
-            sender.sendMessage(new StringTextComponent("Usage: /realname <nick>"));
-        } else {
-            User usr = Users.getUserByNick(args[0]);
-            if (usr != null) {
-                sender.sendMessage(new StringTextComponent(args[0] + " = " + usr.getUserName()));
-            } else {
-                sender.sendMessage(new StringTextComponent(args[0] + " is not a registered nickname"));
-            }
-        }
-    }
-    
-    @Override
-    public boolean checkPermission(MinecraftServer server, ICommandSender sender) {
-        
-        return true;
-    }
-     */
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
+import com.mojang.brigadier.context.CommandContext;
+
+import k4unl.minecraft.colorchat.commands.arguments.NickArgument;
+import k4unl.minecraft.colorchat.lib.User;
+import k4unl.minecraft.k4lib.commands.Command;
+import net.minecraft.command.CommandSource;
+import net.minecraft.command.Commands;
+import net.minecraft.util.text.StringTextComponent;
+
+public class CommandRealName implements Command {
+	@Override
+	public void register(LiteralArgumentBuilder<CommandSource> argumentBuilder) {
+		argumentBuilder.then(Commands.argument("nick", NickArgument.nick()).executes(this::getNick));
+	}
+
+	private int getNick(CommandContext<CommandSource> context) {
+		User target = NickArgument.getUser(context, "nick");
+		context.getSource().sendFeedback(new StringTextComponent(target.getNick() + " = " + target.getUserName()), false);
+		return 0;
+	}
+
+	@Override
+	public String getName() {
+		return "realname";
+	}
+
+	@Override
+	public boolean canUse(CommandSource commandSource) {
+		return true;
+	}
 }

@@ -147,13 +147,13 @@ public class Groups {
 		}
 	}
 
-	public static String getGroupNames() {
+	public static String[] getGroupNames() {
 
-		String all = "";
+		List<String> all = new ArrayList<>();
 		for (Group g : groupList) {
-			all += g.getName() + " ";
+			all.add(g.getName());
 		}
-		return all;
+		return all.toArray(new String[0]);
 	}
 
 
