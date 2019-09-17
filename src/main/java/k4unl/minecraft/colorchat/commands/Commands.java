@@ -18,8 +18,12 @@ import net.minecraft.command.arguments.ArgumentTypes;
 public class Commands extends CommandsRegistry {
 
 	public Commands(boolean isDedicatedServer, CommandDispatcher<CommandSource> dispatcher) {
-		ArgumentTypes.register("groups", GroupArgument.class, new ArgumentSerializer<>(GroupArgument::group));
-		ArgumentTypes.register("nicks", NickArgument.class, new ArgumentSerializer<>(NickArgument::nick));
+		try {
+			ArgumentTypes.register("groups", GroupArgument.class, new ArgumentSerializer<>(GroupArgument::group));
+			ArgumentTypes.register("nicks", NickArgument.class, new ArgumentSerializer<>(NickArgument::nick));
+		} catch (IllegalArgumentException e) {
+			//Already registered these.
+		}
 
 		register(dispatcher, new CommandColorChat());
 		register(dispatcher, new CommandColor());
