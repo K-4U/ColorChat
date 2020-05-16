@@ -1,12 +1,6 @@
 package k4unl.minecraft.colorchat.events;
 
-import java.util.List;
-
-import k4unl.minecraft.colorchat.lib.Colours;
-import k4unl.minecraft.colorchat.lib.Log;
-import k4unl.minecraft.colorchat.lib.Mode;
-import k4unl.minecraft.colorchat.lib.User;
-import k4unl.minecraft.colorchat.lib.Users;
+import k4unl.minecraft.colorchat.lib.*;
 import k4unl.minecraft.colorchat.lib.config.CCConfig;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
@@ -16,6 +10,8 @@ import net.minecraftforge.event.ServerChatEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
 import net.minecraftforge.event.world.WorldEvent.Save;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+
+import java.util.List;
 
 
 public class EventHelper {
@@ -27,7 +23,7 @@ public class EventHelper {
 
 	@SubscribeEvent
 	public void chatEvent(ServerChatEvent event) {
-		Log.info("We got a chat message: " + event.getUsername() + ":" + event.getMessage());
+		Log.debug("We got a chat message: " + event.getUsername() + ":" + event.getMessage());
 		Boolean aBoolean = CCConfig.changeDisplayName.get();
 		if (!aBoolean) {
 			TranslationTextComponent orig = (TranslationTextComponent) event.getComponent().deepCopy();
@@ -103,5 +99,8 @@ public class EventHelper {
 			TextFormatting colour = Colours.getRandomColour();
 			user.setUserColor(colour);
 		}
+		//Send them all the data:
+//		DeferredWorkQueue.runLater(() ->
+//				CCNetworkHandler.getInstance().sendTo(new PackageAllDataToClient(Groups.getGroups(), Users.getUsers()), (ServerPlayerEntity) event.getPlayer()));
 	}
 }

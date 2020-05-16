@@ -1,28 +1,10 @@
 package k4unl.minecraft.colorchat.commands.arguments;
 
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.concurrent.CompletableFuture;
-
-import com.mojang.brigadier.StringReader;
-import com.mojang.brigadier.arguments.ArgumentType;
-import com.mojang.brigadier.context.CommandContext;
-import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import com.mojang.brigadier.exceptions.DynamicCommandExceptionType;
-import com.mojang.brigadier.suggestion.Suggestions;
-import com.mojang.brigadier.suggestion.SuggestionsBuilder;
-
-import k4unl.minecraft.colorchat.lib.Group;
-import k4unl.minecraft.colorchat.lib.Groups;
-import net.minecraft.command.CommandSource;
-import net.minecraft.command.ISuggestionProvider;
-import net.minecraft.util.text.TranslationTextComponent;
-
 /**
  * @author Koen Beckers (K-4U)
  */
-public class GroupArgument implements ArgumentType<Group> {
-
+public class GroupArgument { //implements ArgumentType<Group> {
+/*
 	public static final DynamicCommandExceptionType GROUP_INVALID = new DynamicCommandExceptionType((p_208659_0_) -> {
 		return new TranslationTextComponent("argument.group.invalid", p_208659_0_);
 	});
@@ -54,5 +36,5 @@ public class GroupArgument implements ArgumentType<Group> {
 	@Override
 	public Collection<String> getExamples() {
 		return EXAMPLES;
-	}
+	}*/
 }

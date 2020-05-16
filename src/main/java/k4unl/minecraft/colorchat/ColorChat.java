@@ -29,18 +29,22 @@ public class ColorChat {
 
 		Users.init();
 
-		EventHelper.init();
-
 		instance = this;
 		FMLJavaModLoadingContext.get().getModEventBus().register(this);
 		EventHelper.init();
 		MinecraftForge.EVENT_BUS.addListener(this::onServerStart);
+
+//		NetworkHandler networkHandler = new CCNetworkHandler();
+//		DeferredWorkQueue.runLater(networkHandler::init);
+
+//		ArgumentTypes.register("groups", GroupArgument.class, new ArgumentSerializer<>(GroupArgument::group));
+//		ArgumentTypes.register("nicks", NickArgument.class, new ArgumentSerializer<>(NickArgument::nick));
 	}
 
 	@SubscribeEvent
 	public void onServerStart(FMLServerStartedEvent event) {
 
-		ColourChatData colourChatData = ColourChatData.get(event.getServer().getWorld(DimensionType.OVERWORLD));
+		ColourChatData colourChatData = ColourChatData.get(event.getServer().func_71218_a(DimensionType.OVERWORLD)); //getWorld
 
 		boolean b = event.getServer() instanceof DedicatedServer;
 		CommandsRegistry commandsRegistry = new Commands(b, event.getServer().getCommandManager().getDispatcher());

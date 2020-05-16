@@ -7,29 +7,36 @@ import net.minecraft.util.text.TextFormatting;
 
 public class User {
 
-	private TextFormatting userColor;
-	private String nick;
-	private String realUserName;
-	private boolean hasNick;
-	private String group;
+    private TextFormatting userColor;
+    private String nick;
+    private String realUserName;
+    private boolean hasNick;
+    private String group;
 
-	public User(String _username, TextFormatting _userColor, String _nick) {
+    public User(String _username, TextFormatting _userColor, String _nick, String groupName) {
+        realUserName = _username;
+        userColor = _userColor;
+        if (null != _nick) {
+            hasNick = true;
+            nick = _nick;
+        }
+        if (null != groupName) {
+            this.group = groupName;
+        }
+    }
 
-		realUserName = _username;
-		userColor = _userColor;
-		nick = _nick;
-	}
+    public User(String _username, TextFormatting _userColor, String _nick) {
+        this(_username, _userColor, _nick, null);
+    }
 
-	public User(String _username) {
+    public User(String _username) {
+        this(_username, Colours.getRandomColour(), null);
+    }
 
-		realUserName = _username;
-		userColor = Colours.getRandomColour();
-	}
-
-	public User(CompoundNBT compoundnbt) {
-		this.realUserName = compoundnbt.getString("realUsername");
-		this.nick = compoundnbt.getString("nick");
-		this.userColor = Colours.get(compoundnbt.getString("color"));
+    public User(CompoundNBT compoundnbt) {
+        this.realUserName = compoundnbt.getString("realUsername");
+        this.nick = compoundnbt.getString("nick");
+        this.userColor = Colours.get(compoundnbt.getString("color"));
 		this.hasNick = compoundnbt.getBoolean("hasNick");
 		this.group = compoundnbt.getString("group"); //TODO: Move groups to scoreboard
 	}
@@ -61,10 +68,14 @@ public class User {
 	}
 
 	public void setNick(String newNick) {
-
-		nick = newNick;
-		hasNick = true;
-	}
+        if (null != newNick) {
+            nick = newNick;
+            hasNick = true;
+        } else {
+            hasNick = false;
+            nick = null;
+        }
+    }
 
 	public TextFormatting getColor() {
 
