@@ -45,7 +45,9 @@ public class User {
 		CompoundNBT nbt = new CompoundNBT();
 		nbt.putString("realUsername", getUserName());
 		nbt.putString("nick", getNick());
-		nbt.putString("color", getColor().getFriendlyName());
+		if (null != getColor()) {
+			nbt.putString("color", getColor().getFriendlyName());
+		}
 		nbt.putBoolean("hasNick", hasNick());
 		if (null != group) {
 			nbt.putString("group", group);
